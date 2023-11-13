@@ -10,6 +10,6 @@ class Cprofile extends Model
     use HasFactory;
     public function cname()
     {
-        return $this->belongsTo(Cname::class);
+        return $this->belongsTo(Cname::class,'channel_name_id');
     }
 }

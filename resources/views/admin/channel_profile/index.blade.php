@@ -1,6 +1,5 @@
 @extends('admin.layouts.app')
 
-
 @section('page_title')
 <div class="row mb-2">
   <div class="col-sm-6">
@@ -8,8 +7,7 @@
   </div>
   <div class="col-sm-6">
     <ol class="breadcrumb float-sm-right">
-      <li class="breadcrumb-item"><a href="{{ url('#') }}">Dashboard</a></li>
-      {{-- <li class="breadcrumb-item"><a href="{{ url('/admin/dashboard') }}">Dashboard</a></li> --}}
+      <li class="breadcrumb-item"><a href="{{ url('/') }}">Dashboard</a></li>
       <li class="breadcrumb-item active">Channel Profile</li>
     </ol>
   </div>
@@ -37,27 +35,27 @@
             <th>Action</th>
           </tr>
         </thead>
-        {{-- <tbody>
-            @foreach ($cProfile_list as $item)
+        <tbody>
+            @foreach ($cprofile_list as $item)
             <tr>
-                <td>{{ $item->image }}</td>
-                <td>{{ $item->name }}</td>
+                <td><img src="{{ url('upload/images/'.$item->image) }}" alt="Image" class="img-fluid"></td>
+                <td>{{ $item->cname->name }}</td>
                 <td>{{ $item->Profile_name }}</td>
                 <td>{{ $item->Profile_link }}</td>
                 <td>{{ $item->status }}</td>
                 <td>
-                  <div class="btn-group" role="group">
+                  {{-- <div class="btn-group" role="group">
                     <a href="{{ url("/channel_name/$item->id/edit") }}" class="btn btn-primary btn-sm">Update</a>    
                     <form action="{{ url("/channel_name/$item->id") }}" method="POST" onsubmit="return confirm('Do you really want to delete this category?');">
                         @csrf
                         @method('delete')
                         <input type="submit" value="Delete" class="btn btn-danger btn-sm ml-1">
                     </form>
-                  </div>
+                  </div> --}}
                 </td>
               </tr>
             @endforeach 
-        </tbody> --}}
+        </tbody>
       </table>
     </div>
    

@@ -15,10 +15,10 @@ class CprofileController extends Controller
      */
     public function index()
     {
-        // $data['cProfile_list'] = Cprofile::get();
-        // return view('admin.channel_profile.index', $data);
+        $data['cprofile_list'] = Cprofile::get();
+        return view('admin.channel_profile.index', $data);
 
-        return view('admin.channel_profile.index');
+        // return view('admin.channel_profile.index');
     }
 
     /**
