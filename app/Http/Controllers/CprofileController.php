@@ -105,8 +105,14 @@ class CprofileController extends Controller
      * @param  \App\Models\Cprofile  $cprofile
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Cprofile $cprofile)
+    public function destroy($id)
     {
-        //
+        $cProfile = Cprofile::find($id);
+        if (!$cProfile) {
+
+            return redirect('/channel_profile');
+        }
+        $cProfile->delete();
+        return redirect("/channel_profile");
     }
 }

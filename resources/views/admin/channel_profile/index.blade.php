@@ -44,14 +44,17 @@
                 <td>{{ $item->Profile_link }}</td>
                 <td>{{ $item->status }}</td>
                 <td>
-                  {{-- <div class="btn-group" role="group">
-                    <a href="{{ url("/channel_name/$item->id/edit") }}" class="btn btn-primary btn-sm">Update</a>    
+                  <div class="btn-group" role="group">
+                    {{-- <a href="{{ url("/channel_name/$item->id/edit") }}" class="btn btn-primary btn-sm">Update</a>    
                     <form action="{{ url("/channel_name/$item->id") }}" method="POST" onsubmit="return confirm('Do you really want to delete this category?');">
+                       --}}
+                       <a href="{{ url("#") }}" class="btn btn-primary btn-sm">Update</a>    
+                       <form action="{{ url("/channel_profile/$item->id") }}" method="POST" onsubmit="return confirm('Do you really want to delete this category?');">
                         @csrf
                         @method('delete')
                         <input type="submit" value="Delete" class="btn btn-danger btn-sm ml-1">
                     </form>
-                  </div> --}}
+                  </div>
                 </td>
               </tr>
             @endforeach 
