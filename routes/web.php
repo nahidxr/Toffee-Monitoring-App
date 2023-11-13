@@ -1,7 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PlayerController;
+use App\Http\Controllers\CnameController;
+use App\Http\Controllers\DashboardController;
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,5 +17,12 @@ use App\Http\Controllers\PlayerController;
 */
 
 
-Route::get('/', [PlayerController::class, 'index']);
+ Route::get('/', [DashboardController::class, 'index']);
 
+
+Route::get('/channel_name', [CnameController::class, 'index']);
+ Route::get('/channel_name/create', [CnameController::class, 'create']);
+ Route::post('/channel_name', [CnameController::class, 'store']);
+Route::get('/channel_name/{id}/edit', [CnameController::class, 'edit']);
+Route::put('/channel_name/{id}', [CnameController::class, 'update']);
+Route::delete('/channel_name/{id}', [CnameController::class, 'destroy']);
