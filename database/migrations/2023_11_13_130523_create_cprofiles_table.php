@@ -15,6 +15,11 @@ return new class extends Migration
     {
         Schema::create('cprofiles', function (Blueprint $table) {
             $table->id();
+            $table->string('Profile_name');
+            $table->foreignId('channel_name_id')->constrained('cnames');
+            $table->string('Profile_link');
+            $table->integer('status')->default(0);
+            $table->string('image');
             $table->timestamps();
         });
     }

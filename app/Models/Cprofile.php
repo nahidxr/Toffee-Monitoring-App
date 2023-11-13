@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Cprofile extends Model
 {
     use HasFactory;
+    public function cname()
+    {
+        return $this->belongsTo(Cname::class);
+    }
 }

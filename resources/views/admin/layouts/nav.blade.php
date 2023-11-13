@@ -18,7 +18,7 @@
         </a>
       </li>
       <li class="nav-item">
-        <a href="{{ url('#') }}" class="nav-link">
+        <a href="{{ url('/channel_profile') }}" class="nav-link">
           <i class="fas fa-folder"></i>
           <p>
             Channel Profile

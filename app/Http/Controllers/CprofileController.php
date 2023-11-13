@@ -14,7 +14,10 @@ class CprofileController extends Controller
      */
     public function index()
     {
-        //
+        // $data['cProfile_list'] = Cprofile::get();
+        // return view('admin.channel_profile.index', $data);
+
+        return view('admin.channel_profile.index');
     }
 
     /**
@@ -24,7 +27,8 @@ class CprofileController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.channel_profile.create');
+
     }
 
     /**
@@ -35,7 +39,22 @@ class CprofileController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = new Cprofile();
+        $data->Profile_name = $request->pname;
+        $data->channel_name_id = $request->cname;
+        $data->Profile_link = $request->plink;
+        $data->status = $request->pstatus;
+        
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $extension = $file->getClientOriginalExtension();
+            $filename = time() . '.' . $extension;
+            $file->move('upload/images', $filename);
+            $data->image = $filename;
+        }
+        $data->save();
+
+        return redirect('/channel_profile');
     }
 
     /**
