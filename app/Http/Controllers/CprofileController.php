@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cname;
 use App\Models\Cprofile;
 use Illuminate\Http\Request;
 
@@ -27,7 +28,9 @@ class CprofileController extends Controller
      */
     public function create()
     {
-        return view('admin.channel_profile.create');
+
+        $data["channel_list"] = Cname::get();
+        return view('admin.channel_profile.create',$data);
 
     }
 
@@ -41,7 +44,7 @@ class CprofileController extends Controller
     {
         $data = new Cprofile();
         $data->Profile_name = $request->pname;
-        $data->channel_name_id = $request->cname;
+        $data->channel_name_id = $request->channel_name_id;
         $data->Profile_link = $request->plink;
         $data->status = $request->pstatus;
         
@@ -53,8 +56,13 @@ class CprofileController extends Controller
             $data->image = $filename;
         }
         $data->save();
+        $notification = array(
+            'message' => 'Image Inserted Successfully',
+            'alert-type' => 'success'
 
-        return redirect('/channel_profile');
+        );
+
+        return redirect('/channel_profile')->with($notification);
     }
 
     /**
