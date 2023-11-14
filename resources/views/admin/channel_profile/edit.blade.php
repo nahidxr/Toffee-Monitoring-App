@@ -36,27 +36,15 @@
                         @endforeach
                     </select>
               </div>
-
-
-              {{-- <div class="form-group">
-                <label for="exampleInputEmail1">Channel Name</label>
-                <input type="text" class="form-control" name="cname" id="cName" value="{{ old('name') }}" placeholder="Enter Channel Name">
-              </div>
-              @error('name')
-              <p class="text-danger">{{ $message }}</p>
-              @enderror --}}
-
               <div class="form-group">
                 <label for="exampleInputEmail1">Profile Name</label>
                 <input type="text" class="form-control" name="pname" id="pName" value="{{ $channel_profile_list->Profile_name }}" placeholder="Enter Profile Name">
               </div>
-
               <div class="form-group">
                 <label for="exampleInputEmail1">Profile Link</label>
                 <input type="text" class="form-control" name="plink" id="plink" value="{{ $channel_profile_list->Profile_link }}" placeholder="Enter Profile Link">
               </div>
               {{-- channel status --}}
-
               <div class="form-group">
                 <label  for="channel">Channe Status</label>
                     <select name="status" class="form-control">
@@ -69,15 +57,6 @@
                     </select>
               </div>
 
-
-
-              {{-- <div class="form-group">
-                <label for="exampleInputEmail1">Profile Status</label>
-                <input type="text" class="form-control" name="pstatus" id="pstatus" value="{{ old('name') }}" placeholder="Enter Channel Status">
-              </div> --}}
-
-              {{-- Image Upload section Start --}}
-
               <div class="form-group">
                 <h5> Image <span class="text-danger">*</span></h5>
                 <div class="controls">
@@ -89,22 +68,12 @@
                 <div class="controls">
                     <img id="showImage"
                         src="{{ (!empty($channel_profile_list->image))? url('upload/images/'.$channel_profile_list->image):url('upload/no_image.png') }}"
-                        {{-- src="{{  url("#") }}" --}}
                         alt="" style="hight:100px;width:100px;border:1px solid #000000;">
                 </div>
 
             </div>
 
-
                 {{-- Image Upload section End --}}
-
-
-
-
-              @error('name')
-              <p class="text-danger">{{ $message }}</p>
-          @enderror
-            </div>
          
             <!-- /.card-body -->
 

@@ -23,32 +23,19 @@
     </div>
     <div class="card-body">
         <form action="{{ url('/channel_profile') }}" method="POST" enctype="multipart/form-data">
-
             @csrf
             <div class="card-body">
-
-
               <div class="form-group">
                 <label  for="category">Channel Name List</label>
                     <select name="channel_name_id" class="form-control">
                         <option value="">Select a Channel</option>
-        
                         @foreach ($channel_list as $item)
                         <option value="{{ $item->id }}" {{ old('channel_name_id')==$item->id ? 'selected' : ''}}>{{ $item->name }}
                         </option>
                         @endforeach
                     </select>
               </div>
-
-
-              {{-- <div class="form-group">
-                <label for="exampleInputEmail1">Channel Name</label>
-                <input type="text" class="form-control" name="cname" id="cName" value="{{ old('name') }}" placeholder="Enter Channel Name">
-              </div>
-              @error('name')
-              <p class="text-danger">{{ $message }}</p>
-              @enderror --}}
-
+           
               <div class="form-group">
                 <label for="exampleInputEmail1">Profile Name</label>
                 <input type="text" class="form-control" name="pname" id="pName" value="{{ old('name') }}" placeholder="Enter Profile Name">
@@ -64,21 +51,12 @@
                 <label  for="channel">Channe Status</label>
                     <select name="status" class="form-control">
                         <option value="">Select a Channel</option>
-        
                         @foreach ($channel_status as $x=>$status)
                         <option value="{{ $x }}" {{ old('status')==$x ? 'selected' : ''}}>{{ $status }}
                         </option>
                         @endforeach
                     </select>
               </div>
-
-
-
-              {{-- <div class="form-group">
-                <label for="exampleInputEmail1">Profile Status</label>
-                <input type="text" class="form-control" name="pstatus" id="pstatus" value="{{ old('name') }}" placeholder="Enter Channel Status">
-              </div> --}}
-
               {{-- Image Upload section Start --}}
 
               <div class="form-group">
@@ -96,17 +74,7 @@
                 </div>
 
             </div>
-
-
                 {{-- Image Upload section End --}}
-
-
-
-
-              @error('name')
-              <p class="text-danger">{{ $message }}</p>
-          @enderror
-            </div>
          
             <!-- /.card-body -->
 
