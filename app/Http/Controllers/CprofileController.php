@@ -97,7 +97,8 @@ class CprofileController extends Controller
             $data->image = $filename;
         }
 
-        $data->update();
+        $data->save();
+
         $notification = array(
             'message' => 'Image Updated Successfully',
             'alert-type' => 'success'

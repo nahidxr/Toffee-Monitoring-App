@@ -10,6 +10,14 @@
         </a>
       </li>
       <li class="nav-item">
+        <a href="{{ url('/channel_checking') }}" class="nav-link">
+          <i class="fas fa-folder"></i>
+          <p>
+            Channel Checking
+          </p>
+        </a>
+      </li>
+      <li class="nav-item">
         <a href="{{ url('/channel_name') }}" class="nav-link">
           <i class="fas fa-folder"></i>
           <p>

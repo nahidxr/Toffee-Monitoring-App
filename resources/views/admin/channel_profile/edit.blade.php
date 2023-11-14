@@ -22,7 +22,8 @@
       <h3 class="card-title">Update Channel Profile</h3>
     </div>
     <div class="card-body">
-        <form action="{{ url('/channel_profile') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ url("/channel_profile/$channel_profile_list->id") }}" method="POST" enctype="multipart/form-data">
+            @method("put")
             @csrf
             <div class="card-body">
               <div class="form-group">
