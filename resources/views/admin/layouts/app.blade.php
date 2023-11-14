@@ -9,6 +9,8 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="{{ asset('/admin/plugins/fontawesome-free/css/all.min.css') }}">
+    <!-- Ekko Lightbox -->
+    <link rel="stylesheet" href="/admin/plugins/ekko-lightbox/ekko-lightbox.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="{{ asset('/admin/dist/css/adminlte.min.css') }}">
 </head>
@@ -141,7 +143,9 @@
 <script src="{{ asset('/admin/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 <!-- AdminLTE App -->
 <script src="{{ asset('/admin/dist/js/adminlte.min.js') }}"></script>
-<!-- AdminLTE for demo purposes -->
-{{-- <script src="{{ asset('/admin/dist/js/demo.js') }}"></script> --}}
+<!-- Filterizr-->
+<script src="/admin/plugins/filterizr/jquery.filterizr.min.js"></script>
+<!-- Ekko Lightbox -->
+<script src="/admin/plugins/ekko-lightbox/ekko-lightbox.min.js"></script>
 </body>
 </html>

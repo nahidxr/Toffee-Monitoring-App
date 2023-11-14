@@ -27,6 +27,7 @@
       <table class="table table-bordered">
         <thead>
           <tr>
+            <th>#</th>
             <th>Channel Logo</th>
             <th>Channel Name</th>
             <th>Profile Name</th>
@@ -36,20 +37,31 @@
           </tr>
         </thead>
         <tbody>
+          @php
+          $counter = 1; // Initialize the counter variable
+          @endphp
             @foreach ($cprofile_list as $item)
             <tr>
+              <td>{{ $counter++ }}</td>
                 <td><img src="{{ url('upload/images/'.$item->image) }}" alt="Image" class="img-fluid"></td>
                 <td>{{ $item->cname->name }}</td>
                 <td>{{ $item->Profile_name }}</td>
                 <td>{{ $item->Profile_link }}</td>
-                {{-- <td>{{ $item->status }}</td> --}}
-                <td>{{ App\Enums\ChannelStatus::getDescription($item->status) }}</td>
+                {{-- <td>{{ App\Enums\ChannelStatus::getDescription($item->status) }}</td> --}}
+                @if($item->status === \App\Enums\ChannelStatus::Active)
+                <td>
+                <span style="color: green;"><i class="fas fa-check-circle"></i> {{ \App\Enums\ChannelStatus::getDescription($item->status) }}</span>
+                </td>
+                @elseif($item->status === \App\Enums\ChannelStatus::Inactive)
+                <td>
+               <span style="color: red;"><i class="fas fa-times-circle"></i> {{ \App\Enums\ChannelStatus::getDescription($item->status) }}</span>
+                </td>
+                @else
+                <td>{{ \App\Enums\ChannelStatus::getDescription($item->status) }}</td>
+               @endif
                 <td>
                   <div class="btn-group" role="group">
                     <a href="{{ url("/channel_profile/$item->id/edit") }}" class="btn btn-primary btn-sm">Update</a>    
-                    {{-- <form action="{{ url("/channel_name/$item->id") }}" method="POST" onsubmit="return confirm('Do you really want to delete this category?');"> --}}
-                      
-                       {{-- <a href="{{ url("/channel_profile/$item->id/edit</a>") }}" class="btn btn-primary btn-sm">Update</a>     --}}
                        <form action="{{ url("/channel_profile/$item->id") }}" method="POST" onsubmit="return confirm('Do you really want to delete this category?');">
                         @csrf
                         @method('delete')
@@ -62,7 +74,7 @@
         </tbody>
       </table>
     </div>
-   
     
   </div>
+ 
 @endsection
