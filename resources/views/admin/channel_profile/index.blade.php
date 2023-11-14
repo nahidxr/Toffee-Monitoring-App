@@ -42,13 +42,14 @@
                 <td>{{ $item->cname->name }}</td>
                 <td>{{ $item->Profile_name }}</td>
                 <td>{{ $item->Profile_link }}</td>
-                <td>{{ $item->status }}</td>
+                {{-- <td>{{ $item->status }}</td> --}}
+                <td>{{ App\Enums\ChannelStatus::getDescription($item->status) }}</td>
                 <td>
                   <div class="btn-group" role="group">
-                    {{-- <a href="{{ url("/channel_name/$item->id/edit") }}" class="btn btn-primary btn-sm">Update</a>    
-                    <form action="{{ url("/channel_name/$item->id") }}" method="POST" onsubmit="return confirm('Do you really want to delete this category?');">
-                       --}}
-                       <a href="{{ url("#") }}" class="btn btn-primary btn-sm">Update</a>    
+                    <a href="{{ url("/channel_profile/$item->id/edit") }}" class="btn btn-primary btn-sm">Update</a>    
+                    {{-- <form action="{{ url("/channel_name/$item->id") }}" method="POST" onsubmit="return confirm('Do you really want to delete this category?');"> --}}
+                      
+                       {{-- <a href="{{ url("/channel_profile/$item->id/edit</a>") }}" class="btn btn-primary btn-sm">Update</a>     --}}
                        <form action="{{ url("/channel_profile/$item->id") }}" method="POST" onsubmit="return confirm('Do you really want to delete this category?');">
                         @csrf
                         @method('delete')

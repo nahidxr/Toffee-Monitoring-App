@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ChannelStatus;
 use App\Models\Cname;
 use App\Models\Cprofile;
+use Illuminate\Broadcasting\Channel;
+use Illuminate\Support\Facades\File;
 use Illuminate\Http\Request;
 
 class CprofileController extends Controller
@@ -28,8 +31,9 @@ class CprofileController extends Controller
      */
     public function create()
     {
-
+        $data["channel_status"] = ChannelStatus::asSelectArray();
         $data["channel_list"] = Cname::get();
+        $data["channel_profile_list"] = Cprofile::get();
         return view('admin.channel_profile.create',$data);
 
     }
@@ -46,7 +50,7 @@ class CprofileController extends Controller
         $data->Profile_name = $request->pname;
         $data->channel_name_id = $request->channel_name_id;
         $data->Profile_link = $request->plink;
-        $data->status = $request->pstatus;
+        $data->status = $request->status;
         
         if ($request->hasFile('image')) {
             $file = $request->file('image');
@@ -82,9 +86,23 @@ class CprofileController extends Controller
      * @param  \App\Models\Cprofile  $cprofile
      * @return \Illuminate\Http\Response
      */
-    public function edit(Cprofile $cprofile)
+    public function edit($id)
     {
-        //
+        $cProfile = Cprofile::find($id);
+        if (!$cProfile) {
+
+            return redirect('/channel_profile');
+        }
+
+        $data["channel_profile_list"] = $cProfile;
+
+        //new added data
+        $data["channel_status"] = ChannelStatus::asSelectArray();
+        $data["channel_name_list"] = Cname::get();
+
+
+
+        return view("admin.channel_profile.edit", $data);
     }
 
     /**
@@ -94,9 +112,49 @@ class CprofileController extends Controller
      * @param  \App\Models\Cprofile  $cprofile
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Cprofile $cprofile)
+    public function update(Request $request, $id)
     {
-        //
+        $data = Cprofile::find($id);
+        if (!$data) {
+
+            return redirect('/channel_profile');
+        }
+        $data->Profile_name = $request->pname;
+        $data->channel_name_id = $request->channel_name_id;
+        $data->Profile_link = $request->plink;
+        $data->status = $request->status;
+        
+        // if ($request->hasFile('image')) {
+        //     $file = $request->file('image');
+        //     $extension = $file->getClientOriginalExtension();
+        //     $filename = time() . '.' . $extension;
+        //     $file->move('upload/images', $filename);
+        //     $data->image = $filename;
+        // }
+        // $data->save();
+
+        if ($request->hasFile('image')) {
+            $destination = 'upload/images/' . $data->image;
+            if (File::exists($destination)) {
+
+                File::delete($destination);
+            }
+            $file = $request->file('image');
+            $extension = $file->getClientOriginalExtension();
+            $filename = time() . '.' . $extension;
+            $file->move('upload/images', $filename);
+            $data->image = $filename;
+        }
+
+        $data->update();
+
+        $notification = array(
+            'message' => 'Image Updated Successfully',
+            'alert-type' => 'success'
+
+        );
+
+        return redirect('/channel_profile')->with($notification);
     }
 
     /**

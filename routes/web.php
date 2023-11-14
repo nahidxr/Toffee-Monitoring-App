@@ -34,7 +34,7 @@ Route::delete('/channel_name/{id}', [CnameController::class, 'destroy']);
 Route::get('/channel_profile', [CprofileController::class, 'index']);
 Route::get('/channel_profile/create', [CprofileController::class, 'create']);
 Route::post('/channel_profile', [CprofileController::class, 'store']);
-// Route::get('/channel_profile/{id}/edit', [CprofileController::class, 'edit']);
-// Route::put('/channel_profile/{id}', [CprofileController::class, 'update']);
+Route::get('/channel_profile/{id}/edit', [CprofileController::class, 'edit']);
+Route::put('/channel_profile/{id}', [CprofileController::class, 'update']);
 Route::delete('/channel_profile/{id}', [CprofileController::class, 'destroy']);
 

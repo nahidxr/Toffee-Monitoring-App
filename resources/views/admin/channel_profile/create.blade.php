@@ -58,11 +58,26 @@
                 <label for="exampleInputEmail1">Profile Link</label>
                 <input type="text" class="form-control" name="plink" id="plink" value="{{ old('name') }}" placeholder="Enter Profile Link">
               </div>
+              {{-- channel status --}}
 
               <div class="form-group">
+                <label  for="channel">Channe Status</label>
+                    <select name="status" class="form-control">
+                        <option value="">Select a Channel</option>
+        
+                        @foreach ($channel_status as $x=>$status)
+                        <option value="{{ $x }}" {{ old('status')==$x ? 'selected' : ''}}>{{ $status }}
+                        </option>
+                        @endforeach
+                    </select>
+              </div>
+
+
+
+              {{-- <div class="form-group">
                 <label for="exampleInputEmail1">Profile Status</label>
                 <input type="text" class="form-control" name="pstatus" id="pstatus" value="{{ old('name') }}" placeholder="Enter Channel Status">
-              </div>
+              </div> --}}
 
               {{-- Image Upload section Start --}}
 
@@ -73,15 +88,14 @@
                 </div>
 
             </div>
-            {{-- <div class="form-group">
+            <div class="form-group">
                 <div class="controls">
                     <img id="showImage"
-                        src="{{ (!empty($alldata->image))? url('upload/images/'.$alldata->image):url('upload/no_image.png') }}"
-                        src="{{  url("#") }}"
-                        alt="" style="hight:100px;width:100px;border:1px solid #000000;">
+                        src="{{ (!empty($channel_profile_list->image))? url('upload/images/'.$channel_profile_list->image):url('upload/no_image.png') }}"
+                        alt="" style="hight:125px;width:125px;border:1px solid #000000;">
                 </div>
 
-            </div> --}}
+            </div>
 
 
                 {{-- Image Upload section End --}}
