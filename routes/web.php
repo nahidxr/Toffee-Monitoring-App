@@ -1,10 +1,12 @@
 <?php
 
-use App\Http\Controllers\ChannelCheckController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CnameController;
 use App\Http\Controllers\CprofileController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ChannelCheckController;
+use App\Http\Controllers\TestController;
+
 
 
 
@@ -42,5 +44,11 @@ Route::delete('/channel_profile/{id}', [CprofileController::class, 'destroy']);
 
 //channel checking
 Route::get('/channel_checking', [ChannelCheckController::class, 'index']);
+
+//TestController
+Route::get('/test',[TestController::class,'index']);
+Route::get('post',[TestController::class,'test']);
+
+
 
 

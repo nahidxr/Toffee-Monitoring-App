@@ -33,5 +33,13 @@
           </p>
         </a>
       </li>
+      {{-- <li class="nav-item">
+        <a href="{{ url('/test') }}" class="nav-link">
+          <i class="fas fa-folder"></i>
+          <p>
+            Chennel Status
+          </p>
+        </a>
+      </li> --}}
     </ul>
   </nav> 

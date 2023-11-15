@@ -71,10 +71,10 @@
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
   
-      <a href="#">
-        <img src="{{ asset('/admin/dist/img/AdminLTELogo.png') }}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-        {{-- <span class="brand-text font-weight-light">Toffee</span> --}}
-      </a>
+    <a href="#">
+      <img src="{{ asset('/admin/dist/img/AdminLTELogo.png') }}" class="brand-image img-circle elevation-3" style="opacity: .8; border-left-style: solid; margin-left: 20px; border-left-width: 0px; height: 50px; width: 50px;margin-top: 10px;">
+    </a>
+    
       
    
    

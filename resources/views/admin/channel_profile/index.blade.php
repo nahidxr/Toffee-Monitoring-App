@@ -43,7 +43,7 @@
             @foreach ($cprofile_list as $item)
             <tr>
               <td>{{ $counter++ }}</td>
-                <td><img src="{{ url('upload/images/'.$item->image) }}" alt="Image" class="img-fluid"></td>
+                <td><img src="{{ url('upload/images/'.$item->image) }}" alt="Image" class="img-fluid"width="150" height="100"></td>
                 <td>{{ $item->cname->name }}</td>
                 <td>{{ $item->Profile_name }}</td>
                 <td>{{ $item->Profile_link }}</td>
