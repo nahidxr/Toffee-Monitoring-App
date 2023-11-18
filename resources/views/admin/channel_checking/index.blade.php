@@ -723,7 +723,10 @@ var playButtons = document.querySelectorAll('.playButton');
     // Function to start video playback
     function playVideo() {
       const src = {
-        hls: 'https://bldcmstag-cdn.toffeelive.com/cdn/live/boishakhi/playlist.m3u8'
+        hls: 'https://mcdn-test.toffeelive.com/cdn/live/cnn/playlist.m3u8'
+        // hls: 'https://bldcmstag-cdn.toffeelive.com/cdn/live/boishakhi/playlist.m3u8'
+        //hls: 'https://live-cdn.tsports.com/channel-01/index.m3u8'
+       //hls: 'http://34.104.36.159/2002/manifest.m3u8'
       };
       const settings = {
         licenseKey: 'ZW5ieGlkcGtna0AxNjQwODAz',
