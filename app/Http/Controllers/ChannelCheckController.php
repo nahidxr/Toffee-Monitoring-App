@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Cprofile;
 use Illuminate\Support\Facades\Http;
 
 
@@ -11,7 +12,9 @@ class ChannelCheckController extends Controller
    
     public function index()
     {
-        return view('admin.channel_checking.index');
+        $data['cprofile_list'] = Cprofile::get();
+        // dd($data);
+        return view('admin.channel_checking.index',$data);
     }
 
     public function create()

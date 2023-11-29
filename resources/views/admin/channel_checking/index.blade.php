@@ -155,7 +155,9 @@
         </a>
   </header>
   <div class="mosaic-container">
-    <!-- Channel 1 -->
+
+
+    {{-- <!-- Channel 1 -->
     <div class="channel-item" id="channel1">
       <a href="#" class="playButton"> <!-- Use a class instead of ID for multiple channels -->
         <img src="{{ asset('/admin/dist/img/AdminLTELogo.png') }}" class="brand-image elevation-3" style="opacity: .8; border-left-style: solid; margin-left: 25px; border-left-width: 0px; height: 100px; width: 100px; margin-top: 10px;">
@@ -165,64 +167,25 @@
         <span class="channel-light light-green"></span>
         <span class="status">Status: Online</span>
       </div>    
+    </div> --}}
+
+    @foreach($cprofile_list as $channel)
+      {{-- @php
+        dd($channel->Profile_link );
+    @endphp --}}
+    
+    <div class="channel-item" id="channel{{ $channel->id }}">
+        <a href="#" class="playButton" data-channel-link="{{ $channel->Profile_link }}">
+            <img src="{{ url('upload/images/'.$channel->image) }}" class="brand-image elevation-3" style="opacity: .8; border-left-style: solid; margin-left: 25px; border-left-width: 0px; height: 50px; width: 60px; margin-top: 10px;">
+        </a>      
+        <div class="channel-name">{{ $channel->cname->name }}</div>
+        <div class="channel-status">
+            <span class="channel-light light-green"></span>
+            <span class="status">Status: {{ $channel->status }}</span>
+        </div>    
     </div>
+@endforeach
  
-    <!-- Add other channels -->
-    <div class="channel-item" id="channel1">
-        <a href="#" class="playButton"> <!-- Use a class instead of ID for multiple channels -->
-          <img src="{{ asset('/admin/dist/img/AdminLTELogo.png') }}" class="brand-image elevation-3" style="opacity: .8; border-left-style: solid; margin-left: 25px; border-left-width: 0px; height: 100px; width: 100px; margin-top: 10px;">
-        </a>      
-        <div class="channel-name">Toffee</div>
-        <div class="channel-status">
-          <span class="channel-light light-green"></span>
-          <span class="status">Status: Online</span>
-        </div>    
-      </div>
-       <!-- Add other channels -->
-    <div class="channel-item" id="channel1">
-        <a href="#" class="playButton"> <!-- Use a class instead of ID for multiple channels -->
-          <img src="{{ asset('/admin/dist/img/AdminLTELogo.png') }}" class="brand-image elevation-3" style="opacity: .8; border-left-style: solid; margin-left: 25px; border-left-width: 0px; height: 100px; width: 100px; margin-top: 10px;">
-        </a>      
-        <div class="channel-name">Toffee</div>
-        <div class="channel-status">
-          <span class="channel-light light-green"></span>
-          <span class="status">Status: Online</span>
-        </div>    
-      </div>
-       <!-- Add other channels -->
-    <div class="channel-item" id="channel1">
-        <a href="#" class="playButton"> <!-- Use a class instead of ID for multiple channels -->
-          <img src="{{ asset('/admin/dist/img/AdminLTELogo.png') }}" class="brand-image elevation-3" style="opacity: .8; border-left-style: solid; margin-left: 25px; border-left-width: 0px; height: 100px; width: 100px; margin-top: 10px;">
-        </a>      
-        <div class="channel-name">Toffee</div>
-        <div class="channel-status">
-          <span class="channel-light light-green"></span>
-          <span class="status">Status: Online</span>
-        </div>    
-      </div>
-      <!-- Add other channels -->
-    <div class="channel-item" id="channel1">
-        <a href="#" class="playButton"> <!-- Use a class instead of ID for multiple channels -->
-          <img src="{{ asset('/admin/dist/img/AdminLTELogo.png') }}" class="brand-image elevation-3" style="opacity: .8; border-left-style: solid; margin-left: 25px; border-left-width: 0px; height: 100px; width: 100px; margin-top: 10px;">
-        </a>      
-        <div class="channel-name">Toffee</div>
-        <div class="channel-status">
-          <span class="channel-light light-green"></span>
-          <span class="status">Status: Online</span>
-        </div>    
-      </div>
-      <!-- Add other channels -->
-    <div class="channel-item" id="channel1">
-        <a href="#" class="playButton"> <!-- Use a class instead of ID for multiple channels -->
-          <img src="{{ asset('/admin/dist/img/AdminLTELogo.png') }}" class="brand-image elevation-3" style="opacity: .8; border-left-style: solid; margin-left: 25px; border-left-width: 0px; height: 100px; width: 100px; margin-top: 10px;">
-        </a>      
-        <div class="channel-name">Toffee</div>
-        <div class="channel-status">
-          <span class="channel-light light-green"></span>
-          <span class="status">Status: Online</span>
-        </div>    
-      </div>
-    </div>
     <!-- Modal for video playback -->
     <div id="videoModal" class="modal">
         <div class="modal-content" style="width: 400px;height: 400px;">
@@ -241,7 +204,9 @@ var playButtons = document.querySelectorAll('.playButton');
     playButtons.forEach(function(playButton) {
       playButton.addEventListener('click', function() {
         document.getElementById('videoModal').style.display = 'block';
-        playVideo(); // Function to start video playback
+        var channelLink = this.dataset.channelLink; // Fetching data-channel-link attribute from the clicked element
+
+        playVideo(channelLink); // Function to start video playback
       });
     });
 
@@ -252,10 +217,14 @@ var playButtons = document.querySelectorAll('.playButton');
     });
 
     // Function to start video playback
-    function playVideo() {
+    function playVideo(channelLink) {
+      // console.log(channelLink);
+
       const src = {
-       hls: 'https://bldcmstag-cdn.toffeelive.com/cdn/live/boishakhi/playlist.m3u8'
-      //  hls: 'https://mcdn-test.toffeelive.com/cdn/live/nick/playlist.m3u8'
+        // console.log(channelLink);
+       
+       // hls: 'https://bldcmstag-cdn.toffeelive.com/cdn/live/boishakhi/playlist.m3u8'
+       hls: channelLink
         
       };
       const settings = {
