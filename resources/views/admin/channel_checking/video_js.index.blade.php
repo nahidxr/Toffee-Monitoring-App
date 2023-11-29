@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -18,7 +19,7 @@
       poster="MY_VIDEO_POSTER.jpg"
       data-setup="{}"
     >
-      <source src="rtmp://192.168.5.46:1935/live/dbc_news_576" type="rtmp/mp4/>
+      <source src="https://bldcmstag-cdn.toffeelive.com/cdn/live/boishakhi/playlist.m3u8" type="application/x-mpegURL/>
    
       <p class="vjs-no-js">
         To view this video please enable JavaScript, and consider upgrading to a

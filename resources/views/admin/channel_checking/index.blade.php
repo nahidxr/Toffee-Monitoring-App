@@ -254,7 +254,8 @@ var playButtons = document.querySelectorAll('.playButton');
     // Function to start video playback
     function playVideo() {
       const src = {
-       hls: 'https://mcdn-test.toffeelive.com/cdn/live/nick/playlist.m3u8'
+       hls: 'https://bldcmstag-cdn.toffeelive.com/cdn/live/boishakhi/playlist.m3u8'
+      //  hls: 'https://mcdn-test.toffeelive.com/cdn/live/nick/playlist.m3u8'
         
       };
       const settings = {
@@ -286,9 +287,6 @@ var playButtons = document.querySelectorAll('.playButton');
     }
 
 </script>
-
-
-{{-- script end --}}
 
 </body>
 </html>
