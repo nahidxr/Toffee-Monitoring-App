@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Cprofile;
+
 
 class DashboardController extends Controller
 {
@@ -13,7 +15,9 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        return view('admin.dashboard.index');
+
+        $data['cprofile_list'] = Cprofile::get();
+        return view('admin.dashboard.index', $data);
     }
 
     /**

@@ -203,6 +203,8 @@ channels.forEach(function(channel) {
 });
 
 
+
+
 </script>
 <!-- Add a div container with a unique id - video and UI elements will be appended to this container -->
 <script>
@@ -212,65 +214,10 @@ var playButtons = document.querySelectorAll('.playButton');
       playButton.addEventListener('click', function() {
         document.getElementById('videoModal').style.display = 'block';
         var channelLink = this.dataset.channelLink; // Fetching data-channel-link attribute from the clicked element
-        fetchChannelLink(channelLink);
+
         playVideo(channelLink); // Function to start video playback
-       
       });
     });
-
-    // Fetch and log the response from the channel link
-function fetchChannelLink(channelLink) {
-
-  fetch(channelLink)
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      return response.text();
-    })
-    .then(data => {
-
-      const baseURL = 'https://mcdn-test.toffeelive.com/cdn/live/slang/';
-      const generatedURLs = generateFullURLs(data, baseURL);
-      
-
-      console.log(generatedURLs);
-      // You can process or handle the stream information further here as needed
-    })
-    .catch(error => {
-      console.error('There was a problem with the fetch operation:', error);
-    });
-}
-
-function generateFullURLs(responseText, baseURL) {
-  const lines = responseText.split('\n');
-  const streamInfo = [];
-
-  for (let i = 0; i < lines.length; i++) {
-    if (lines[i].startsWith('#EXT-X-STREAM-INF:')) {
-      const streamData = {};
-      const attributes = lines[i].split(',');
-
-      for (let j = 0; j < attributes.length; j++) {
-        const attr = attributes[j].split('=');
-        streamData[attr[0]] = attr[1];
-      }
-
-      streamInfo.push(streamData);
-    }
-  }
-
-  const fullURLs = streamInfo.map(info => {
-    const bitrate = info['BANDWIDTH'];
-    const channel = info['RESOLUTION'].split('=')[1];
-    return `${baseURL}${channel}/${channel}.m3u8?bitrate=${bitrate}&channel=${channel}&gp_id=`;
-  });
-
-  return fullURLs;
-
-  
-}
-
 
     // Close modal when close button is clicked
     document.querySelector('.close').addEventListener('click', function() {
