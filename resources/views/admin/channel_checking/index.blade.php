@@ -188,6 +188,8 @@
 
 <!-- Include Radiant Media Player JavaScript library -->
 <script src="https://cdn.radiantmediatechs.com/rmp/9.12.0/js/rmp-hlsjs.min.js"></script>
+
+{{-- 
 <script>
 // Update channel light color based on status
 var channels = document.querySelectorAll('.channel-item');
@@ -202,7 +204,11 @@ channels.forEach(function(channel) {
     }
 });
 
-</script>
+</script> --}}
+
+
+
+
 <!-- Add a div container with a unique id - video and UI elements will be appended to this container -->
 <script>
 // Open modal and play video when play button is clicked
@@ -217,9 +223,11 @@ var playButtons = document.querySelectorAll('.playButton');
       });
     });
 
+
+
+
     // Fetch and log the response from the channel link
 function fetchChannelLink(channelLink) {
-
   fetch(channelLink)
     .then(response => {
       if (!response.ok) {
@@ -231,9 +239,13 @@ function fetchChannelLink(channelLink) {
 
       const baseURL = 'https://mcdn-test.toffeelive.com/cdn/live/slang/';
       const generatedURLs = generateFullURLs(data, baseURL);
-      
 
-      console.log(generatedURLs);
+      //show the manifest file
+      // console.log(generatedURLs);
+
+         // Fetch responses from generated URLs and log them
+         fetchAndLogAllResponses(generatedURLs);
+      
       // You can process or handle the stream information further here as needed
     })
     .catch(error => {
@@ -259,9 +271,54 @@ function generateFullURLs(responseText, baseURL) {
   }
 
   return fullURLs;
+  
+}
+
+function fetchAndLogResponse(url) {
+  fetch(url)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.text();
+    })
+    .then(data => {
+      console.log(`Response from ${url}:`);
+      console.log(data);
+      validateResponse(data);
+      // You can further process or handle the response data here as needed
+    })
+    .catch(error => {
+      console.error(`There was a problem with the fetch operation for ${url}:`, error);
+    });
+}
+
+// Function to fetch responses from all URLs and log them
+function fetchAndLogAllResponses(urls) {
+  for (let i = 0; i < urls.length; i++) {
+    fetchAndLogResponse(urls[i]);
+  }
+}
+
+function validateResponse(data) {
+  const lines = data.split('\n');
+
+  // Validate required parameters
+  const requiredParameters = ['#EXTM3U', '#EXT-X-VERSION:3', '#EXT-X-MEDIA-SEQUENCE', '#EXT-X-TARGETDURATION', '#EXT-X-KEY'];
+  const presentParameters = requiredParameters.filter(param => lines.some(line => line.startsWith(param)));
+
+  // Validate if any .ts files are present
+  const tsFiles = lines.filter(line => line.endsWith('.ts'));
+
+  if (presentParameters.length === requiredParameters.length && tsFiles.length > 0) {
+    console.log('Validation successful: All required parameters present and .ts files found.');
+  } else {
+    console.log('Validation failed: Missing required parameters or no .ts files found.');
+  }
 
   
 }
+
 
     // Close modal when close button is clicked
     document.querySelector('.close').addEventListener('click', function() {
@@ -276,7 +333,6 @@ function generateFullURLs(responseText, baseURL) {
       const src = {
         // console.log(channelLink);
        
-       // hls: 'https://bldcmstag-cdn.toffeelive.com/cdn/live/boishakhi/playlist.m3u8'
        hls: channelLink
         
       };
