@@ -3,27 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
       padding: 0;
       background-color: #f8f9fa;
-      
     }
-    .text-danger-glow {
-    color: #ff4141;
-     text-shadow: 0 0 20px #f00, 0 0 30px #f00, 0 0 40px #f00, 0 0 50px #f00, 0 0 60px #f00, 0 0 70px #f00, 0 0 80px #f00;
-  }
-
-.blink {
-  animation: blinker 1s cubic-bezier(.5, 0, 1, 1) infinite alternate;  
-}
-@keyframes blinker {  
-  from { opacity: 1; }
-  to { opacity: 0; }
-}
 
     header {
       background-color: #343a40;
@@ -155,8 +141,6 @@
       }
     }
   </style>
-
-
   <title>Toffee Monitoring App</title>
 </head>
 <body>
@@ -164,6 +148,7 @@
   <header>
     <h1>Toffee Channel Check</h1>
     <a href="{{ url('/') }}" class="nav-link">
+          <i class="fas fa-folder"></i>
           <p>
             Dashboard
           </p>
@@ -178,7 +163,7 @@
         </a>      
         <div class="channel-name">{{ $channel->cname->name }}</div>
         <div class="channel-status">
-          <span class="channel-light light-green"></i></span>
+          <span class="channel-light light-green"></span>
           <span class="status">Status: Active</span>
       </div>
   
@@ -317,7 +302,7 @@ function validateResponse(data,channelItem) {
     console.log('Validation failed: Missing required parameters or no .ts files found.');
      // Validation failed
      light.classList.remove('light-green');
-    light.innerHTML = '<i class="fa fa-circle text-danger-glow blink"></i>';
+    light.classList.add('light-red');
     statusText.textContent = 'Status: Inactive';
   }
 
