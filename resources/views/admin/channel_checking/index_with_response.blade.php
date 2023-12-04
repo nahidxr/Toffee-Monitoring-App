@@ -173,7 +173,6 @@
           <span class="channel-light light-red"></span>
           <span class="status">Status: Inactive</span>
       </div>
-  
     </div>
 @endforeach
  
@@ -197,14 +196,16 @@ channels.forEach(function(channel) {
 
     if (status.includes('Inactive')) {
         var light = channel.querySelector('.channel-light');
-        light.classList.remove('light-green');
-        light.classList.add('light-red');
+        light.classList.remove('light-red');
+        light.classList.add('light-green');
     }
 });
 
 
 </script>
-<!-- Add a div container with a unique id - video and UI elements will be appended to this container -->
+
+
+
 <script>
 // Open modal and play video when play button is clicked
 var playButtons = document.querySelectorAll('.playButton');

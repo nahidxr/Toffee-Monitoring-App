@@ -170,8 +170,8 @@
 
         
         <div class="channel-status">
-          <span class="channel-light light-red"></span>
-          <span class="status">Status: Inactive</span>
+          <span class="channel-light light-green"></span>
+          <span class="status">Status: Active</span>
       </div>
   
     </div>
@@ -201,7 +201,6 @@ channels.forEach(function(channel) {
         light.classList.add('light-red');
     }
 });
-
 
 </script>
 <!-- Add a div container with a unique id - video and UI elements will be appended to this container -->
@@ -244,33 +243,25 @@ function fetchChannelLink(channelLink) {
 
 function generateFullURLs(responseText, baseURL) {
   const lines = responseText.split('\n');
-  const streamInfo = [];
+  const fullURLs = [];
 
   for (let i = 0; i < lines.length; i++) {
     if (lines[i].startsWith('#EXT-X-STREAM-INF:')) {
-      const streamData = {};
-      const attributes = lines[i].split(',');
+      const regexResult = /\/([^/]+\.m3u8)\?bitrate=(\d+)&channel=([^&]+)/.exec(lines[i + 1]);
+      if (regexResult && regexResult.length === 4) {
+        const fileName = regexResult[1];
+        const bitrate = regexResult[2];
+        const channel = regexResult[3];
 
-      for (let j = 0; j < attributes.length; j++) {
-        const attr = attributes[j].split('=');
-        streamData[attr[0]] = attr[1];
+        fullURLs.push(`${baseURL}${channel}/${fileName}?bitrate=${bitrate}&channel=${channel}&gp_id=`);
       }
-
-      streamInfo.push(streamData);
     }
   }
-
-  const fullURLs = streamInfo.map(info => {
-    const bitrate = info['BANDWIDTH'];
-    const channel = info['RESOLUTION'].split('=')[1];
-    return `${baseURL}${channel}/${channel}.m3u8?bitrate=${bitrate}&channel=${channel}&gp_id=`;
-  });
 
   return fullURLs;
 
   
 }
-
 
     // Close modal when close button is clicked
     document.querySelector('.close').addEventListener('click', function() {
