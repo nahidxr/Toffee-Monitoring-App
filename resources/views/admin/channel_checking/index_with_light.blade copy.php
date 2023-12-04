@@ -211,32 +211,23 @@ channels.forEach(function(channel) {
 
 <!-- Add a div container with a unique id - video and UI elements will be appended to this container -->
 <script>
-
-    function initializeVideoPlayback() {
-    var channelItems = document.querySelectorAll('.channel-item');
-    channelItems.forEach(function(channelItem) {
-      var playButton = channelItem.querySelector('.playButton');
-      var channelLink = playButton.dataset.channelLink;
-
-      fetchChannelLink(channelLink,channelItem);
-    });
-  }
-
-
 // Open modal and play video when play button is clicked
 var playButtons = document.querySelectorAll('.playButton');
     playButtons.forEach(function(playButton) {
       playButton.addEventListener('click', function() {
         document.getElementById('videoModal').style.display = 'block';
         var channelLink = this.dataset.channelLink; // Fetching data-channel-link attribute from the clicked element
+        fetchChannelLink(channelLink);
         playVideo(channelLink); // Function to start video playback
        
       });
     });
 
 
+
+
     // Fetch and log the response from the channel link
-function fetchChannelLink(channelLink,channelItem) {
+function fetchChannelLink(channelLink) {
   fetch(channelLink)
     .then(response => {
       if (!response.ok) {
@@ -253,7 +244,7 @@ function fetchChannelLink(channelLink,channelItem) {
       // console.log(generatedURLs);
 
          // Fetch responses from generated URLs and log them
-         fetchAndLogAllResponses(generatedURLs,channelItem);
+         fetchAndLogAllResponses(generatedURLs);
       
       // You can process or handle the stream information further here as needed
     })
@@ -283,15 +274,7 @@ function generateFullURLs(responseText, baseURL) {
   
 }
 
-
-// Function to fetch responses from all URLs and log them
-function fetchAndLogAllResponses(urls,channelItem) {
-  for (let i = 0; i < urls.length; i++) {
-    fetchAndLogResponse(urls[i],channelItem);
-  }
-}
-
-function fetchAndLogResponse(url,channelItem) {
+function fetchAndLogResponse(url) {
   fetch(url)
     .then(response => {
       if (!response.ok) {
@@ -302,7 +285,7 @@ function fetchAndLogResponse(url,channelItem) {
     .then(data => {
       console.log(`Response from ${url}:`);
       console.log(data);
-      validateResponse(data,channelItem);
+      validateResponse(data);
       // You can further process or handle the response data here as needed
     })
     .catch(error => {
@@ -310,9 +293,15 @@ function fetchAndLogResponse(url,channelItem) {
     });
 }
 
-function validateResponse(data,channelItem) {
+// Function to fetch responses from all URLs and log them
+function fetchAndLogAllResponses(urls) {
+  for (let i = 0; i < urls.length; i++) {
+    fetchAndLogResponse(urls[i]);
+  }
+}
+
+function validateResponse(data) {
   const lines = data.split('\n');
-  const light = channelItem.querySelector('.channel-light');
 
   // Validate required parameters
   const requiredParameters = ['#EXTM3U', '#EXT-X-VERSION:3', '#EXT-X-MEDIA-SEQUENCE', '#EXT-X-TARGETDURATION', '#EXT-X-KEY'];
@@ -321,27 +310,14 @@ function validateResponse(data,channelItem) {
   // Validate if any .ts files are present
   const tsFiles = lines.filter(line => line.endsWith('.ts'));
 
-  // if (presentParameters.length === requiredParameters.length && tsFiles.length > 0) {
-  //   console.log('Validation successful: All required parameters present and .ts files found.');
-  // } else {
-  //   console.log('Validation failed: Missing required parameters or no .ts files found.');
-  // }
-
   if (presentParameters.length === requiredParameters.length && tsFiles.length > 0) {
     console.log('Validation successful: All required parameters present and .ts files found.');
-        // Validation successful
-    light.classList.remove('light-red');
-    light.classList.add('light-green');
   } else {
     console.log('Validation failed: Missing required parameters or no .ts files found.');
-     // Validation failed
-     light.classList.remove('light-green');
-    light.classList.add('light-red');
   }
 
+  
 }
-
-
 
 
     // Close modal when close button is clicked
@@ -388,10 +364,6 @@ function validateResponse(data,channelItem) {
       }
     }
 
- // Trigger video playback initialization when the page loads
- window.addEventListener('load', function() {
-    initializeVideoPlayback();
-  });
 </script>
 
 </body>
