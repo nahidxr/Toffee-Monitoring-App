@@ -162,13 +162,6 @@
             <img src="{{ url('upload/images/'.$channel->image) }}" class="brand-image elevation-3" style="opacity: .8; border-left-style: solid; margin-left: 25px; border-left-width: 0px; height: 40px; width: 60px; margin-top: 10px;">
         </a>      
         <div class="channel-name">{{ $channel->cname->name }}</div>
-        {{-- <div class="channel-status">
-            <span class="channel-light light-green"></span>
-            <span class="status">Status: Active</span>
-            <span class="status">Status: {{ $channel->status }}</span>
-        </div>     --}}
-
-        
         <div class="channel-status">
           <span class="channel-light light-green"></span>
           <span class="status">Status: Active</span>
@@ -189,26 +182,6 @@
 <!-- Include Radiant Media Player JavaScript library -->
 <script src="https://cdn.radiantmediatechs.com/rmp/9.12.0/js/rmp-hlsjs.min.js"></script>
 
-{{-- 
-<script>
-// Update channel light color based on status
-var channels = document.querySelectorAll('.channel-item');
-
-channels.forEach(function(channel) {
-    var status = channel.querySelector('.status').textContent;
-
-    if (status.includes('Inactive')) {
-        var light = channel.querySelector('.channel-light');
-        light.classList.remove('light-green');
-        light.classList.add('light-red');
-    }
-});
-
-</script> --}}
-
-
-
-
 <!-- Add a div container with a unique id - video and UI elements will be appended to this container -->
 <script>
 
@@ -222,7 +195,6 @@ channels.forEach(function(channel) {
     });
   }
 
-
 // Open modal and play video when play button is clicked
 var playButtons = document.querySelectorAll('.playButton');
     playButtons.forEach(function(playButton) {
@@ -233,7 +205,6 @@ var playButtons = document.querySelectorAll('.playButton');
        
       });
     });
-
 
     // Fetch and log the response from the channel link
 function fetchChannelLink(channelLink,channelItem) {
@@ -283,7 +254,6 @@ function generateFullURLs(responseText, baseURL) {
   
 }
 
-
 // Function to fetch responses from all URLs and log them
 function fetchAndLogAllResponses(urls,channelItem) {
   for (let i = 0; i < urls.length; i++) {
@@ -313,6 +283,7 @@ function fetchAndLogResponse(url,channelItem) {
 function validateResponse(data,channelItem) {
   const lines = data.split('\n');
   const light = channelItem.querySelector('.channel-light');
+  const statusText = channelItem.querySelector('.status');
 
   // Validate required parameters
   const requiredParameters = ['#EXTM3U', '#EXT-X-VERSION:3', '#EXT-X-MEDIA-SEQUENCE', '#EXT-X-TARGETDURATION', '#EXT-X-KEY'];
@@ -321,28 +292,21 @@ function validateResponse(data,channelItem) {
   // Validate if any .ts files are present
   const tsFiles = lines.filter(line => line.endsWith('.ts'));
 
-  // if (presentParameters.length === requiredParameters.length && tsFiles.length > 0) {
-  //   console.log('Validation successful: All required parameters present and .ts files found.');
-  // } else {
-  //   console.log('Validation failed: Missing required parameters or no .ts files found.');
-  // }
-
   if (presentParameters.length === requiredParameters.length && tsFiles.length > 0) {
     console.log('Validation successful: All required parameters present and .ts files found.');
         // Validation successful
     light.classList.remove('light-red');
     light.classList.add('light-green');
+    statusText.textContent = 'Status: Active';
   } else {
     console.log('Validation failed: Missing required parameters or no .ts files found.');
      // Validation failed
      light.classList.remove('light-green');
     light.classList.add('light-red');
+    statusText.textContent = 'Status: Inactive';
   }
 
 }
-
-
-
 
     // Close modal when close button is clicked
     document.querySelector('.close').addEventListener('click', function() {
