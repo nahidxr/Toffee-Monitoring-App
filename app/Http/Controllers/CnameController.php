@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cname;
 use Illuminate\Http\Request;
+use Illuminate\Database\QueryException;
 
 class CnameController extends Controller
 {
@@ -57,13 +58,12 @@ class CnameController extends Controller
     
     public function destroy($id)
     {
-        
-        $cName = Cname::find($id);
-        if (!$cName) {
-
-            return redirect('/channel_name');
+        try {
+            $cName = Cname::findOrFail($id);
+            $cName->delete();
+            return redirect("/channel_name")->with('success', 'Channel deleted successfully.');
+        } catch (QueryException $e) {
+            return redirect("/channel_name")->with('error', 'Cannot delete the channel due to related records.');
         }
-        $cName->delete();
-        return redirect("/channel_name");
     }
 }

@@ -15,15 +15,15 @@
     .text-danger-glow {
     color: #ff4141;
      text-shadow: 0 0 20px #f00, 0 0 30px #f00, 0 0 40px #f00, 0 0 50px #f00, 0 0 60px #f00, 0 0 70px #f00, 0 0 80px #f00;
-  }
+   }
 
-.blink {
-  animation: blinker 1s cubic-bezier(.5, 0, 1, 1) infinite alternate;  
-}
-@keyframes blinker {  
-  from { opacity: 1; }
-  to { opacity: 0; }
-}
+    .blink {
+      animation: blinker 1s cubic-bezier(.5, 0, 1, 1) infinite alternate;  
+    }
+    @keyframes blinker {  
+    from { opacity: 1; }
+    to { opacity: 0; }
+    }
 
     header {
       background-color: #343a40;
@@ -111,29 +111,31 @@
     .channel-button:hover {
       background-color: #0056b3;
     }
+    /* Rounded modal */
     .modal {
       display: none;
       position: fixed;
       z-index: 1;
       left: 0;
-      top: 0;
+      top: 10%;
       width: 100%;
       height: 100%;
       overflow: auto;
-      background-color: rgba(0,0,0,0.4);
+      background-color: rgba(0, 0, 0, 0.4);
     }
 
     .modal-content {
       background-color: #fefefe;
-      margin: 15% auto;
+      border-radius: 25px; /* Adjust the border-radius to create rounded corners */
       padding: 20px;
-      border: 1px solid #888;
+      border: 3px solid #7a7777;
       width: 80%;
       max-width: 600px;
+      margin: 15% auto;
     }
 
     .close {
-      color: #aaa;
+      color: red; /* Change the color to red */
       float: right;
       font-size: 28px;
       font-weight: bold;
@@ -141,11 +143,10 @@
 
     .close:hover,
     .close:focus {
-      color: black;
+      color: darkred; /* Change hover/focus color */
       text-decoration: none;
       cursor: pointer;
     }
-
     @keyframes blink {
       from {
         opacity: 1;
@@ -155,20 +156,24 @@
       }
     }
   </style>
-
-
   <title>Toffee Monitoring App</title>
 </head>
 <body>
-
-  <header>
-    <h1>Toffee Channel Check</h1>
-    <a href="{{ url('/') }}" class="nav-link">
-          <p>
-            Dashboard
-          </p>
+  <header style="display: flex; justify-content: space-between; align-items: center;">
+    <div style="display: flex; align-items: center;">
+        <a href="#">
+          <img src="{{ asset('/admin/dist/img/toffee-icon.png') }}" class="brand-image img-circle elevation-3" style="opacity: .8; border-left-style: solid; margin-left: 20px; border-left-width: 0px; height: 30px; width: 115px;margin-top: 10px;">
         </a>
-  </header>
+        <h1 style="text-align: center; margin-left: 400px;">Toffee Channel Check</h1>
+    </div>
+    <a href="{{ url('/') }}" class="nav-link" style="display: inline-block; padding: 8px 16px; background-color: #007bff; color: white; text-decoration: none; border-radius: 4px;">
+        Dashboard
+    </a>
+</header>
+
+
+  
+    
   <div class="mosaic-container">
 
     @foreach($cprofile_list as $channel)
@@ -176,7 +181,7 @@
         <a href="#" class="playButton" data-channel-link="{{ $channel->Profile_link }}">
             <img src="{{ url('upload/images/'.$channel->image) }}" class="brand-image elevation-3" style="opacity: .8; border-left-style: solid; margin-left: 25px; border-left-width: 0px; height: 40px; width: 60px; margin-top: 10px;">
         </a>      
-        <div class="channel-name">{{ $channel->cname->name }}</div>
+        <div class="channel-name" style="text-align: center;">{{ $channel->cname->name }}</div>
         <div class="channel-status">
           <span class="channel-light light-green"></i></span>
           <span class="status">Status: Active</span>

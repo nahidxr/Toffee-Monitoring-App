@@ -2,7 +2,7 @@
 @section('page_title')
 <div class="row mb-2">
   <div class="col-sm-6">
-    <h1>Channel List</h1>
+    <h1>Channel Dashboard</h1>
   </div>
   <div class="col-sm-6">
     <ol class="breadcrumb float-sm-right">
@@ -32,7 +32,7 @@
         @foreach ($cprofile_list as $item)
         <tr>
           <td>{{ $counter++ }}</td>
-          <td><img src="{{ url('upload/images/'.$item->image) }}" alt="Image" class="img-fluid" width="70" height="70" data-channel-link="{{ $item->Profile_link }}"></td>
+          <td><img src="{{ url('upload/images/'.$item->image) }}" alt="Image" class="img-fluid" width="35" height="30" data-channel-link="{{ $item->Profile_link }}"></td>
           <td>{{ $item->cname->name }}</td>
           <td class="status"><!-- Status will be updated dynamically --></td>
         </tr>
@@ -130,9 +130,6 @@ function fetchAndLogResponse(url,channelItem) {
 function validateResponse(data, channelItem) {
     const lines = data.split('\n');
     const statusText = channelItem.querySelector('.status');
-
-    // Validate required parameters and .ts files as before
-    // ...
      // Validate required parameters
   const requiredParameters = ['#EXTM3U', '#EXT-X-VERSION:3', '#EXT-X-MEDIA-SEQUENCE', '#EXT-X-TARGETDURATION', '#EXT-X-KEY'];
   const presentParameters = requiredParameters.filter(param => lines.some(line => line.startsWith(param)));
@@ -151,7 +148,6 @@ function validateResponse(data, channelItem) {
     }
   }
 
-  
 
  // Trigger video playback initialization when the page loads
  window.addEventListener('load', function() {

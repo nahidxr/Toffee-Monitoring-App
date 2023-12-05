@@ -8,6 +8,8 @@ use App\Models\Cprofile;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Support\Facades\File;
 use Illuminate\Http\Request;
+use Illuminate\Database\QueryException;
+
 
 class CprofileController extends Controller
 {
@@ -109,12 +111,12 @@ class CprofileController extends Controller
 
     public function destroy($id)
     {
-        $cProfile = Cprofile::find($id);
-        if (!$cProfile) {
-
-            return redirect('/channel_profile');
+        try {
+            $cProfile = Cprofile::findOrFail($id);
+            $cProfile->delete();
+            return redirect("/channel_profile")->with('success', 'Channel profile deleted successfully.');
+        } catch (QueryException $e) {
+            return redirect("/channel_profile")->with('error', 'Cannot delete the channel due to related records.');
         }
-        $cProfile->delete();
-        return redirect("/channel_profile");
     }
 }

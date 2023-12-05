@@ -103,7 +103,7 @@
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
-    <section class="content-header">
+    <section class="content-header" style="padding-top: 0px;padding-bottom: 0px;">
       <div class="container-fluid">
         {{-- @include('flash::message') --}}
         @yield('page_title')
