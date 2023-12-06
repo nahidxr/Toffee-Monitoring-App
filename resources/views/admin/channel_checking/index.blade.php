@@ -128,7 +128,7 @@
       background-color: #fefefe;
       border-radius: 25px; /* Adjust the border-radius to create rounded corners */
       padding: 20px;
-      border: 3px solid #7a7777;
+      border: 1px solid #e6337a;
       width: 80%;
       max-width: 600px;
       margin: 15% auto;
@@ -166,20 +166,18 @@
         </a>
         <h1 style="text-align: center; margin-left: 400px;">Toffee Channel Check</h1>
     </div>
-    <a href="{{ url('/') }}" class="nav-link" style="display: inline-block; padding: 8px 16px; background-color: #007bff; color: white; text-decoration: none; border-radius: 4px;">
+    <a href="{{ url('/') }}" class="nav-link" style="display: inline-block; padding: 8px 16px; background-color: #e6337a; color: white; text-decoration: none; border-radius: 4px;">
         Dashboard
     </a>
 </header>
 
-
-  
     
   <div class="mosaic-container">
 
     @foreach($cprofile_list as $channel)
     <div class="channel-item" id="channel{{ $channel->id }}">
         <a href="#" class="playButton" data-channel-link="{{ $channel->Profile_link }}">
-            <img src="{{ url('upload/images/'.$channel->image) }}" class="brand-image elevation-3" style="opacity: .8; border-left-style: solid; margin-left: 25px; border-left-width: 0px; height: 40px; width: 60px; margin-top: 10px;">
+            <img src="{{ url('upload/images/'.$channel->image) }}" class="brand-image elevation-3" style="opacity: .8; border-left-style: solid; margin-left: 25px; border-left-width: 0px; height: 45x; width:60px; margin-top: 10px;">
         </a>      
         <div class="channel-name" style="text-align: center;">{{ $channel->cname->name }}</div>
         <div class="channel-status">
@@ -210,7 +208,6 @@
     channelItems.forEach(function(channelItem) {
       var playButton = channelItem.querySelector('.playButton');
       var channelLink = playButton.dataset.channelLink;
-
       fetchChannelLink(channelLink,channelItem);
     });
   }
@@ -304,6 +301,7 @@ function validateResponse(data,channelItem) {
   const lines = data.split('\n');
   const light = channelItem.querySelector('.channel-light');
   const statusText = channelItem.querySelector('.status');
+  const channelDiv = channelItem;
 
   // Validate required parameters
   const requiredParameters = ['#EXTM3U', '#EXT-X-VERSION:3', '#EXT-X-MEDIA-SEQUENCE', '#EXT-X-TARGETDURATION', '#EXT-X-KEY'];
@@ -311,19 +309,22 @@ function validateResponse(data,channelItem) {
 
   // Validate if any .ts files are present
   const tsFiles = lines.filter(line => line.endsWith('.ts'));
-
-  if (presentParameters.length === requiredParameters.length && tsFiles.length > 0) {
+  // Additional custom validation checks
+  const isKeyMethodPresent = lines.some(line => line.includes('EXT-X-KEY:METHOD=AES-128'));
+  if (presentParameters.length === requiredParameters.length && tsFiles.length > 0 && isKeyMethodPresent) {
     console.log('Validation successful: All required parameters present and .ts files found.');
         // Validation successful
     light.classList.remove('light-red');
     light.classList.add('light-green');
     statusText.textContent = 'Status: Active';
+   // channelDiv.style.backgroundColor = 'lightgreen'; // Change background color for active status
   } else {
     console.log('Validation failed: Missing required parameters or no .ts files found.');
      // Validation failed
      light.classList.remove('light-green');
     light.innerHTML = '<i class="fa fa-circle text-danger-glow blink"></i>';
     statusText.textContent = 'Status: Inactive';
+    channelDiv.style.backgroundColor = 'lightcoral'; // Change background color for inactive status
   }
 
 }

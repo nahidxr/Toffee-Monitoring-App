@@ -7,7 +7,7 @@
   <div class="col-sm-6">
     <ol class="breadcrumb float-sm-right">
       <li class="breadcrumb-item"><a href="{{ url('/') }}">Dashboard</a></li>
-      <li class="breadcrumb-item active">Channel Profile</li>
+      <li class="breadcrumb-item active"></li>
     </ol>
   </div>
 </div>
@@ -32,7 +32,7 @@
         @foreach ($cprofile_list as $item)
         <tr>
           <td>{{ $counter++ }}</td>
-          <td><img src="{{ url('upload/images/'.$item->image) }}" alt="Image" class="img-fluid" width="35" height="30" data-channel-link="{{ $item->Profile_link }}"></td>
+          <td><img src="{{ url('upload/images/'.$item->image) }}" alt="Image" class="img-fluid" width="35" height="25" data-channel-link="{{ $item->Profile_link }}"></td>
           <td>{{ $item->cname->name }}</td>
           <td class="status"><!-- Status will be updated dynamically --></td>
         </tr>
