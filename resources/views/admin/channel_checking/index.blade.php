@@ -203,6 +203,30 @@
 <!-- Add a div container with a unique id - video and UI elements will be appended to this container -->
 <script>
 
+    function checkChannelStatus(channelItem) {
+      var playButton = channelItem.querySelector('.playButton');
+      var channelLink = playButton.dataset.channelLink;
+
+      fetchChannelLink(channelLink, channelItem);
+    }
+
+    function continuouslyCheckChannels() {
+      var channelItems = document.querySelectorAll('.channel-item');
+      var index = 0;
+
+      function checkNextChannel() {
+        if (index < channelItems.length) {
+          checkChannelStatus(channelItems[index]);
+          index++;
+        } else {
+          clearInterval(checkInterval); // Stop when all channels are checked
+        }
+      }
+
+     // var checkInterval = setInterval(checkNextChannel, 120000); // Check every 2 minutes (120 seconds)
+      var checkInterval = setInterval(checkNextChannel, 5000); // Check every 2 minutes (120 seconds)
+    }
+
     function initializeVideoPlayback() {
     var channelItems = document.querySelectorAll('.channel-item');
     channelItems.forEach(function(channelItem) {
@@ -376,6 +400,7 @@ function validateResponse(data,channelItem) {
  // Trigger video playback initialization when the page loads
  window.addEventListener('load', function() {
     initializeVideoPlayback();
+    continuouslyCheckChannels();
   });
 </script>
 
