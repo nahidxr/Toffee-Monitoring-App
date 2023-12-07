@@ -3,12 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
       padding: 0;
       background-color: #f8f9fa;
+      
+    }
+    .text-danger-glow {
+    color: #ff4141;
+     text-shadow: 0 0 20px #f00, 0 0 30px #f00, 0 0 40px #f00, 0 0 50px #f00, 0 0 60px #f00, 0 0 70px #f00, 0 0 80px #f00;
+   }
+
+    .blink {
+      animation: blinker 1s cubic-bezier(.5, 0, 1, 1) infinite alternate;  
+    }
+    @keyframes blinker {  
+    from { opacity: 1; }
+    to { opacity: 0; }
     }
 
     header {
@@ -97,29 +111,31 @@
     .channel-button:hover {
       background-color: #0056b3;
     }
+    /* Rounded modal */
     .modal {
       display: none;
       position: fixed;
       z-index: 1;
       left: 0;
-      top: 0;
+      top: 10%;
       width: 100%;
       height: 100%;
       overflow: auto;
-      background-color: rgba(0,0,0,0.4);
+      background-color: rgba(0, 0, 0, 0.4);
     }
 
     .modal-content {
       background-color: #fefefe;
-      margin: 15% auto;
+      border-radius: 25px; /* Adjust the border-radius to create rounded corners */
       padding: 20px;
-      border: 1px solid #888;
+      border: 1px solid #e6337a;
       width: 80%;
       max-width: 600px;
+      margin: 15% auto;
     }
 
     .close {
-      color: #aaa;
+      color: red; /* Change the color to red */
       float: right;
       font-size: 28px;
       font-weight: bold;
@@ -127,11 +143,10 @@
 
     .close:hover,
     .close:focus {
-      color: black;
+      color: darkred; /* Change hover/focus color */
       text-decoration: none;
       cursor: pointer;
     }
-
     @keyframes blink {
       from {
         opacity: 1;
@@ -144,33 +159,29 @@
   <title>Toffee Monitoring App</title>
 </head>
 <body>
-
-  <header>
-    <h1>Toffee Channel Check</h1>
-    <a href="{{ url('/') }}" class="nav-link">
-          <i class="fas fa-folder"></i>
-          <p>
-            Dashboard
-          </p>
+  <header style="display: flex; justify-content: space-between; align-items: center;">
+    <div style="display: flex; align-items: center;">
+        <a href="#">
+          <img src="{{ asset('/admin/dist/img/toffee-icon.png') }}" class="brand-image img-circle elevation-3" style="opacity: .8; border-left-style: solid; margin-left: 20px; border-left-width: 0px; height: 30px; width: 115px;margin-top: 10px;">
         </a>
-  </header>
+        <h1 style="text-align: center; margin-left: 400px;">Toffee Channel Check</h1>
+    </div>
+    <a href="{{ url('/') }}" class="nav-link" style="display: inline-block; padding: 8px 16px; background-color: #e6337a; color: white; text-decoration: none; border-radius: 4px;">
+        Dashboard
+    </a>
+</header>
+
+    
   <div class="mosaic-container">
 
     @foreach($cprofile_list as $channel)
     <div class="channel-item" id="channel{{ $channel->id }}">
         <a href="#" class="playButton" data-channel-link="{{ $channel->Profile_link }}">
-            <img src="{{ url('upload/images/'.$channel->image) }}" class="brand-image elevation-3" style="opacity: .8; border-left-style: solid; margin-left: 25px; border-left-width: 0px; height: 40px; width: 60px; margin-top: 10px;">
+            <img src="{{ url('upload/images/'.$channel->image) }}" class="brand-image elevation-3" style="opacity: .8; border-left-style: solid; margin-left: 25px; border-left-width: 0px; height: 40x; width:60px; margin-top: 10px;">
         </a>      
-        <div class="channel-name">{{ $channel->cname->name }}</div>
-        {{-- <div class="channel-status">
-            <span class="channel-light light-green"></span>
-            <span class="status">Status: Active</span>
-            <span class="status">Status: {{ $channel->status }}</span>
-        </div>     --}}
-
-        
+        <div class="channel-name" style="text-align: center;">{{ $channel->cname->name }}</div>
         <div class="channel-status">
-          <span class="channel-light light-green"></span>
+          <span class="channel-light light-green"></i></span>
           <span class="status">Status: Active</span>
       </div>
   
@@ -189,45 +200,55 @@
 <!-- Include Radiant Media Player JavaScript library -->
 <script src="https://cdn.radiantmediatechs.com/rmp/9.12.0/js/rmp-hlsjs.min.js"></script>
 
-{{-- 
-<script>
-// Update channel light color based on status
-var channels = document.querySelectorAll('.channel-item');
-
-channels.forEach(function(channel) {
-    var status = channel.querySelector('.status').textContent;
-
-    if (status.includes('Inactive')) {
-        var light = channel.querySelector('.channel-light');
-        light.classList.remove('light-green');
-        light.classList.add('light-red');
-    }
-});
-
-</script> --}}
-
-
-
-
 <!-- Add a div container with a unique id - video and UI elements will be appended to this container -->
 <script>
+
+    function checkChannelStatus(channelItem) {
+      var playButton = channelItem.querySelector('.playButton');
+      var channelLink = playButton.dataset.channelLink;
+
+      fetchChannelLink(channelLink, channelItem);
+    }
+
+    function continuouslyCheckChannels() {
+      var channelItems = document.querySelectorAll('.channel-item');
+      var index = 0;
+
+      function checkNextChannel() {
+        if (index < channelItems.length) {
+          checkChannelStatus(channelItems[index]);
+          index++;
+        } else {
+          clearInterval(checkInterval); // Stop when all channels are checked
+        }
+      }
+
+     // var checkInterval = setInterval(checkNextChannel, 120000); // Check every 2 minutes (120 seconds)
+      var checkInterval = setInterval(checkNextChannel, 5000); // Check every 2 minutes (120 seconds)
+    }
+
+    function initializeVideoPlayback() {
+    var channelItems = document.querySelectorAll('.channel-item');
+    channelItems.forEach(function(channelItem) {
+      var playButton = channelItem.querySelector('.playButton');
+      var channelLink = playButton.dataset.channelLink;
+      fetchChannelLink(channelLink,channelItem);
+    });
+  }
+
 // Open modal and play video when play button is clicked
 var playButtons = document.querySelectorAll('.playButton');
     playButtons.forEach(function(playButton) {
       playButton.addEventListener('click', function() {
         document.getElementById('videoModal').style.display = 'block';
         var channelLink = this.dataset.channelLink; // Fetching data-channel-link attribute from the clicked element
-        fetchChannelLink(channelLink);
         playVideo(channelLink); // Function to start video playback
        
       });
     });
 
-
-
-
     // Fetch and log the response from the channel link
-function fetchChannelLink(channelLink) {
+function fetchChannelLink(channelLink,channelItem) {
   fetch(channelLink)
     .then(response => {
       if (!response.ok) {
@@ -244,7 +265,7 @@ function fetchChannelLink(channelLink) {
       // console.log(generatedURLs);
 
          // Fetch responses from generated URLs and log them
-         fetchAndLogAllResponses(generatedURLs);
+         fetchAndLogAllResponses(generatedURLs,channelItem);
       
       // You can process or handle the stream information further here as needed
     })
@@ -274,7 +295,14 @@ function generateFullURLs(responseText, baseURL) {
   
 }
 
-function fetchAndLogResponse(url) {
+// Function to fetch responses from all URLs and log them
+function fetchAndLogAllResponses(urls,channelItem) {
+  for (let i = 0; i < urls.length; i++) {
+    fetchAndLogResponse(urls[i],channelItem);
+  }
+}
+
+function fetchAndLogResponse(url,channelItem) {
   fetch(url)
     .then(response => {
       if (!response.ok) {
@@ -285,7 +313,7 @@ function fetchAndLogResponse(url) {
     .then(data => {
       console.log(`Response from ${url}:`);
       console.log(data);
-      validateResponse(data);
+      validateResponse(data,channelItem);
       // You can further process or handle the response data here as needed
     })
     .catch(error => {
@@ -293,15 +321,11 @@ function fetchAndLogResponse(url) {
     });
 }
 
-// Function to fetch responses from all URLs and log them
-function fetchAndLogAllResponses(urls) {
-  for (let i = 0; i < urls.length; i++) {
-    fetchAndLogResponse(urls[i]);
-  }
-}
-
-function validateResponse(data) {
+function validateResponse(data,channelItem) {
   const lines = data.split('\n');
+  const light = channelItem.querySelector('.channel-light');
+  const statusText = channelItem.querySelector('.status');
+  const channelDiv = channelItem;
 
   // Validate required parameters
   const requiredParameters = ['#EXTM3U', '#EXT-X-VERSION:3', '#EXT-X-MEDIA-SEQUENCE', '#EXT-X-TARGETDURATION', '#EXT-X-KEY'];
@@ -309,16 +333,25 @@ function validateResponse(data) {
 
   // Validate if any .ts files are present
   const tsFiles = lines.filter(line => line.endsWith('.ts'));
-
-  if (presentParameters.length === requiredParameters.length && tsFiles.length > 0) {
+  // Additional custom validation checks
+  const isKeyMethodPresent = lines.some(line => line.includes('EXT-X-KEY:METHOD=AES-128'));
+  if (presentParameters.length === requiredParameters.length && tsFiles.length > 0 && isKeyMethodPresent) {
     console.log('Validation successful: All required parameters present and .ts files found.');
+        // Validation successful
+    light.classList.remove('light-red');
+    light.classList.add('light-green');
+    statusText.textContent = 'Status: Active';
+   // channelDiv.style.backgroundColor = 'lightgreen'; // Change background color for active status
   } else {
     console.log('Validation failed: Missing required parameters or no .ts files found.');
+     // Validation failed
+     light.classList.remove('light-green');
+    light.innerHTML = '<i class="fa fa-circle text-danger-glow blink"></i>';
+    statusText.textContent = 'Status: Inactive';
+    channelDiv.style.backgroundColor = 'lightcoral'; // Change background color for inactive status
   }
 
-  
 }
-
 
     // Close modal when close button is clicked
     document.querySelector('.close').addEventListener('click', function() {
@@ -364,6 +397,11 @@ function validateResponse(data) {
       }
     }
 
+ // Trigger video playback initialization when the page loads
+ window.addEventListener('load', function() {
+    initializeVideoPlayback();
+    continuouslyCheckChannels();
+  });
 </script>
 
 </body>

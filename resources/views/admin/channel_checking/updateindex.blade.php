@@ -233,6 +233,7 @@
       </div>
 {{-- script start --}}
 
+
 <!-- Include Radiant Media Player JavaScript library -->
 <script src="https://cdn.radiantmediatechs.com/rmp/9.12.0/js/rmp-hlsjs.min.js"></script>
 
@@ -240,15 +241,15 @@
 <script>
 
 function checkChannelStatus(channelItem) {
-  var playButton = channelItem.querySelector('.playButton');
-  var channelLink = playButton.dataset.channelLink;
-  var spinner = channelItem.querySelector('.loading-spinner'); // Get the spinner element
+  const playButton = channelItem.querySelector('.playButton');
+  const channelLink = playButton.dataset.channelLink;
+  const spinner = channelItem.querySelector('.loading-spinner'); // Get the spinner element
 
   spinner.style.display = 'block'; // Show the spinner for the current channel
   hideSpinnersExcept(channelItem); // Hide spinners for other channels
 
   return new Promise((resolve, reject) => {
-    fetchChannelLink(channelLink, channelItem)
+    fetchChannelLink(channelLink)
       .then(() => {
         spinner.style.display = 'none'; // Hide the spinner when checking is complete
         resolve();
@@ -261,9 +262,9 @@ function checkChannelStatus(channelItem) {
 }
 
 function hideSpinnersExcept(currentChannelItem) {
-  var channelItems = document.querySelectorAll('.channel-item');
+  const channelItems = document.querySelectorAll('.channel-item');
   channelItems.forEach(item => {
-    var spinner = item.querySelector('.loading-spinner');
+    const spinner = item.querySelector('.loading-spinner');
     if (item !== currentChannelItem) {
       spinner.style.display = 'none'; // Hide spinners for other channels
     }
@@ -271,11 +272,11 @@ function hideSpinnersExcept(currentChannelItem) {
 }
 
 function checkChannelsSequentially() {
-  var channelItems = document.querySelectorAll('.channel-item');
-  var index = 0;
+  const channelItems = document.querySelectorAll('.channel-item');
+  let index = 0;
 
   function startChecking() {
-    var checkInterval = setInterval(() => {
+    const checkInterval = setInterval(() => {
       if (index < channelItems.length) {
         checkChannelStatus(channelItems[index])
           .then(() => {
@@ -291,48 +292,47 @@ function checkChannelsSequentially() {
         startChecking(); // Restart the checking process
       }
     
-    }, 9000); // Check every 5 seconds
+    }, 5000); // Check every 5 seconds
   }
 
   // Start checking channels
   startChecking();
 }
 
-  function initializeVideoPlayback() {
-    var channelItems = document.querySelectorAll('.channel-item');
-    channelItems.forEach(function(channelItem) {
-      var playButton = channelItem.querySelector('.playButton');
-      var channelLink = playButton.dataset.channelLink;
-      fetchChannelLink(channelLink,channelItem);
-    });
-  }
 
+function initializeVideoPlayback() {
+      var channelItems = document.querySelectorAll('.channel-item');
+      channelItems.forEach(function(channelItem) {
+        var playButton = channelItem.querySelector('.playButton');
+        var channelLink = playButton.dataset.channelLink;
+        fetchAndValidateChannel(channelLink, channelItem);
+      });
+    }
 
+    function fetchAndValidateChannel(channelLink, channelItem) {
+      fetchChannelLink(channelLink)
+        .then(data => {
+          const baseURL = 'https://mcdn-test.toffeelive.com/cdn/live/slang/';
+          const generatedURLs = generateFullURLs(data, baseURL);
+          fetchAndValidateAllProfiles(generatedURLs, channelItem);
+        })
+        .catch(error => {
+          console.error('Error fetching and validating channel:', error);
+          setChannelStatus(channelItem, false);
+        });
+    }
 
-    // Fetch and log the response from the channel link
-function fetchChannelLink(channelLink,channelItem) {
-  fetch(channelLink)
+    function fetchChannelLink(channelLink) {
+      return fetch(channelLink)
     .then(response => {
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
       return response.text();
     })
-    .then(data => {
-
-      const baseURL = 'https://mcdn-test.toffeelive.com/cdn/live/slang/';
-      const generatedURLs = generateFullURLs(data, baseURL);
-
-      //show the manifest file
-      // console.log(generatedURLs);
-
-         // Fetch responses from generated URLs and log them
-         fetchAndLogAllResponses(generatedURLs,channelItem);
-      
-      // You can process or handle the stream information further here as needed
-    })
     .catch(error => {
-      console.error('There was a problem with the fetch operation:', error);
+      console.error('Error fetching channel link:', error);
+      throw error;
     });
 }
 
@@ -354,58 +354,74 @@ function generateFullURLs(responseText, baseURL) {
   }
 
   return fullURLs;
-  
 }
 
-// Function to fetch responses from all URLs and log them
-// Modify the existing function to fetch and validate all URLs for a channel
-function fetchAndValidateAllUrls(urls, channelItem) {
-  const promises = urls.map(url => fetch(url)
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      return response.text();
-    })
-    .then(data => validateResponse(data))
-    .catch(error => {
-      console.error(`There was a problem with the fetch operation for ${url}:`, error);
-      return 'Invalid'; // Return 'Invalid' status if there's an error
-    }));
 
-  Promise.all(promises)
-    .then(results => {
-      const status = results.includes('Invalid') ? 'Inactive' : 'Active';
-      updateChannelStatus(channelItem, status);
-    });
-}
+    // This function initiates the profile validation
+    function fetchAndValidateAllProfiles(urls, channelItem) {
+      const validationPromises = urls.map(url => fetchAndValidateProfile(url));
 
-// Modify the validateResponse function to return the validation result
-function validateResponse(data) {
-  const lines = data.split('\n');
-  const requiredParameters = ['#EXTM3U', '#EXT-X-VERSION:3', '#EXT-X-MEDIA-SEQUENCE', '#EXT-X-TARGETDURATION', '#EXT-X-KEY'];
-  const presentParameters = requiredParameters.filter(param => lines.some(line => line.startsWith(param)));
-  const tsFiles = lines.filter(line => line.endsWith('.ts'));
-  const isKeyMethodPresent = lines.some(line => line.includes('EXT-X-KEY:METHOD=AES-128'));
+      Promise.all(validationPromises)
+        .then(profileResults => {
+          const allProfilesValid = profileResults.every(result => result === true);
 
-  if (presentParameters.length === requiredParameters.length && tsFiles.length > 0 && isKeyMethodPresent) {
-    return 'Valid';
-  } else {
-    return 'Invalid';
+          if (allProfilesValid) {
+            setChannelStatus(channelItem, true);
+          } else {
+            setChannelStatus(channelItem, false);
+          }
+        })
+        .catch(error => {
+          console.error('Error during profile validation:', error);
+          setChannelStatus(channelItem, false);
+        });
+    }
+
+    function fetchAndValidateProfile(url) {
+      return new Promise((resolve, reject) => {
+        fetch(url)
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.text();
+          })
+          .then(data => {
+            console.log(`Response from ${url}:`);
+            console.log(data);
+            const isValid = validateProfile(data);
+            resolve(isValid);
+          })
+          .catch(error => {
+            console.error(`There was a problem with the fetch operation for ${url}:`, error);
+            resolve(false);
+          });
+      });
+    }
+
+   function validateProfile(data) {
+    const lines = data.split('\n');
+    // Add your validation logic for each profile here
+    // For example:
+    const requiredParameters = ['#EXTM3U', '#EXT-X-VERSION:3', '#EXT-X-MEDIA-SEQUENCE', '#EXT-X-TARGETDURATION', '#EXT-X-KEY'];
+    const presentParameters = requiredParameters.filter(param => lines.some(line => line.startsWith(param)));
+
+    const tsFiles = lines.filter(line => line.endsWith('.ts'));
+    const isKeyMethodPresent = lines.some(line => line.includes('EXT-X-KEY:METHOD=AES-128'));
+
+    return presentParameters.length === requiredParameters.length && tsFiles.length > 0 && isKeyMethodPresent;
   }
-}
 
-// Update channel status based on the collective validation result
-function updateChannelStatus(channelItem, status) {
+function setChannelStatus(channelItem, isActive) {
   const light = channelItem.querySelector('.channel-light');
   const statusText = channelItem.querySelector('.status');
   const channelDiv = channelItem;
 
-  if (status === 'Active') {
+  if (isActive) {
     light.classList.remove('light-red');
     light.classList.add('light-green');
     statusText.textContent = 'Status: Active';
-    channelDiv.style.backgroundColor = 'lightgreen';
+    // channelDiv.style.backgroundColor = 'lightgreen';
   } else {
     light.classList.remove('light-green');
     light.innerHTML = '<i class="fa fa-circle text-danger-glow blink"></i>';
@@ -414,12 +430,8 @@ function updateChannelStatus(channelItem, status) {
   }
 }
 
-// Modify the existing function where all responses are fetched and validated
-function fetchAndLogAllResponses(urls, channelItem) {
-  fetchAndValidateAllUrls(urls, channelItem);
-}
 // Open modal and play video when play button is clicked
-  var playButtons = document.querySelectorAll('.playButton');
+    var playButtons = document.querySelectorAll('.playButton');
     playButtons.forEach(function(playButton) {
       playButton.addEventListener('click', function() {
         document.getElementById('videoModal').style.display = 'block';

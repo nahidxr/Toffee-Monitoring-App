@@ -3,12 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
       padding: 0;
       background-color: #f8f9fa;
+      
+    }
+    .text-danger-glow {
+    color: #ff4141;
+     text-shadow: 0 0 20px #f00, 0 0 30px #f00, 0 0 40px #f00, 0 0 50px #f00, 0 0 60px #f00, 0 0 70px #f00, 0 0 80px #f00;
+   }
+
+    .blink {
+      animation: blinker 1s cubic-bezier(.5, 0, 1, 1) infinite alternate;  
+    }
+    @keyframes blinker {  
+    from { opacity: 1; }
+    to { opacity: 0; }
     }
 
     header {
@@ -97,29 +111,31 @@
     .channel-button:hover {
       background-color: #0056b3;
     }
+    /* Rounded modal */
     .modal {
       display: none;
       position: fixed;
       z-index: 1;
       left: 0;
-      top: 0;
+      top: 10%;
       width: 100%;
       height: 100%;
       overflow: auto;
-      background-color: rgba(0,0,0,0.4);
+      background-color: rgba(0, 0, 0, 0.4);
     }
 
     .modal-content {
       background-color: #fefefe;
-      margin: 15% auto;
+      border-radius: 25px; /* Adjust the border-radius to create rounded corners */
       padding: 20px;
-      border: 1px solid #888;
+      border: 1px solid #e6337a;
       width: 80%;
       max-width: 600px;
+      margin: 15% auto;
     }
 
     .close {
-      color: #aaa;
+      color: red; /* Change the color to red */
       float: right;
       font-size: 28px;
       font-weight: bold;
@@ -127,11 +143,10 @@
 
     .close:hover,
     .close:focus {
-      color: black;
+      color: darkred; /* Change hover/focus color */
       text-decoration: none;
       cursor: pointer;
     }
-
     @keyframes blink {
       from {
         opacity: 1;
@@ -140,35 +155,74 @@
         opacity: 0.2;
       }
     }
+    /* CSS modifications for channel-item checking state and loading spinner */
+    .channel-item.checking {
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Add a shadow effect */
+      border: 2px solid #3498db; /* Change border color as desired */
+      transition: box-shadow 0.3s ease-in-out, border 0.3s ease-in-out; /* Add transition effect */
+    }
+     /* CSS modifications for channel-item checking state and loading spinner */
+.channel-item.checking {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Add a shadow effect */
+  border: 2px solid #3498db; /* Change border color as desired */
+  transition: box-shadow 0.3s ease-in-out, border 0.3s ease-in-out; /* Add transition effect */
+}
+
+.loading-spinner {
+  width: 30px;
+  height: 30px;
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  border-top: 4px solid #3498db; /* Change the color as desired */
+  animation: spin 1s linear infinite; /* Apply a rotation animation */
+  display: none; /* Initially hide the spinner */
+}
+
+/* Animation for the spinner */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.channel-item.checking .loading-spinner {
+  display: block;
+}
+
+
   </style>
   <title>Toffee Monitoring App</title>
 </head>
 <body>
-
-  <header>
-    <h1>Toffee Channel Check</h1>
-    <a href="{{ url('/') }}" class="nav-link">
-          <i class="fas fa-folder"></i>
-          <p>
-            Dashboard
-          </p>
+  <header style="display: flex; justify-content: space-between; align-items: center;">
+    <div style="display: flex; align-items: center;">
+        <a href="#">
+          <img src="{{ asset('/admin/dist/img/toffee-icon.png') }}" class="brand-image img-circle elevation-3" style="opacity: .8; border-left-style: solid; margin-left: 20px; border-left-width: 0px; height: 30px; width: 115px;margin-top: 10px;">
         </a>
-  </header>
+        <h1 style="text-align: center; margin-left: 400px;">Toffee Channel Check</h1>
+    </div>
+    <a href="{{ url('/') }}" class="nav-link" style="display: inline-block; padding: 8px 16px; background-color: #e6337a; color: white; text-decoration: none; border-radius: 4px;">
+        Dashboard
+    </a>
+</header>
+
+    
   <div class="mosaic-container">
 
-    @foreach($cprofile_list as $channel)
+   @foreach($cprofile_list as $channel)
     <div class="channel-item" id="channel{{ $channel->id }}">
         <a href="#" class="playButton" data-channel-link="{{ $channel->Profile_link }}">
-            <img src="{{ url('upload/images/'.$channel->image) }}" class="brand-image elevation-3" style="opacity: .8; border-left-style: solid; margin-left: 25px; border-left-width: 0px; height: 40px; width: 60px; margin-top: 10px;">
-        </a>      
-        <div class="channel-name">{{ $channel->cname->name }}</div>
+            <img src="{{ url('upload/images/'.$channel->image) }}" class="brand-image elevation-3" style="opacity: .8; border-left-style: solid; margin-left: 25px; border-left-width: 0px; height: 40x; width:60px; margin-top: 10px;">
+          </a>      
+        <div class="channel-name" style="text-align: center;">{{ $channel->cname->name }}</div>
         <div class="channel-status">
-          <span class="channel-light light-green"></span>
-          <span class="status">Status: Active</span>
-      </div>
-  
+            <span class="channel-light light-green"></span> <!-- Remove unnecessary </i> tag -->
+            <span class="status">Status: Active</span>
+        </div>
+        <div class="loading-spinner"></div> <!-- Loading spinner HTML -->
+
     </div>
 @endforeach
+
  
     <!-- Modal for video playback -->
     <div id="videoModal" class="modal">
@@ -185,12 +239,72 @@
 <!-- Add a div container with a unique id - video and UI elements will be appended to this container -->
 <script>
 
+function checkChannelStatus(channelItem) {
+  var playButton = channelItem.querySelector('.playButton');
+  var channelLink = playButton.dataset.channelLink;
+  var spinner = channelItem.querySelector('.loading-spinner'); // Get the spinner element
+
+  spinner.style.display = 'block'; // Show the spinner for the current channel
+  hideSpinnersExcept(channelItem); // Hide spinners for other channels
+
+  return new Promise((resolve, reject) => {
+    fetchChannelLink(channelLink, channelItem)
+      .then(() => {
+        spinner.style.display = 'none'; // Hide the spinner when checking is complete
+        resolve();
+      })
+      .catch(error => {
+        spinner.style.display = 'none'; // Hide the spinner if an error occurs during checking
+        reject(error);
+      });
+  });
+}
+
+function hideSpinnersExcept(currentChannelItem) {
+  var channelItems = document.querySelectorAll('.channel-item');
+  channelItems.forEach(item => {
+    var spinner = item.querySelector('.loading-spinner');
+    if (item !== currentChannelItem) {
+      spinner.style.display = 'none'; // Hide spinners for other channels
+    }
+  });
+}
+
+function checkChannelsSequentially() {
+  var channelItems = document.querySelectorAll('.channel-item');
+  var index = 0;
+
+  function startChecking() {
+    var checkInterval = setInterval(() => {
+      if (index < channelItems.length) {
+        checkChannelStatus(channelItems[index])
+          .then(() => {
+            index++;
+          })
+          .catch(error => {
+            console.error('Error checking channel:', error);
+            index++;
+          });
+      } else {
+        clearInterval(checkInterval); // Stop when all channels are checked
+        index = 0; // Reset index to start checking from the first channel
+        startChecking(); // Restart the checking process
+      }
+    
+    }, 9000); // Check every 5 seconds
+  }
+
+  // Start checking channels
+  startChecking();
+}
+
+
+
     function initializeVideoPlayback() {
     var channelItems = document.querySelectorAll('.channel-item');
     channelItems.forEach(function(channelItem) {
       var playButton = channelItem.querySelector('.playButton');
       var channelLink = playButton.dataset.channelLink;
-
       fetchChannelLink(channelLink,channelItem);
     });
   }
@@ -284,6 +398,7 @@ function validateResponse(data,channelItem) {
   const lines = data.split('\n');
   const light = channelItem.querySelector('.channel-light');
   const statusText = channelItem.querySelector('.status');
+  const channelDiv = channelItem;
 
   // Validate required parameters
   const requiredParameters = ['#EXTM3U', '#EXT-X-VERSION:3', '#EXT-X-MEDIA-SEQUENCE', '#EXT-X-TARGETDURATION', '#EXT-X-KEY'];
@@ -291,19 +406,22 @@ function validateResponse(data,channelItem) {
 
   // Validate if any .ts files are present
   const tsFiles = lines.filter(line => line.endsWith('.ts'));
-
-  if (presentParameters.length === requiredParameters.length && tsFiles.length > 0) {
+  // Additional custom validation checks
+  const isKeyMethodPresent = lines.some(line => line.includes('EXT-X-KEY:METHOD=AES-128'));
+  if (presentParameters.length === requiredParameters.length && tsFiles.length > 0 && isKeyMethodPresent) {
     console.log('Validation successful: All required parameters present and .ts files found.');
         // Validation successful
     light.classList.remove('light-red');
     light.classList.add('light-green');
     statusText.textContent = 'Status: Active';
+   channelDiv.style.backgroundColor = 'lightgreen'; // Change background color for active status
   } else {
     console.log('Validation failed: Missing required parameters or no .ts files found.');
      // Validation failed
      light.classList.remove('light-green');
-    light.classList.add('light-red');
+    light.innerHTML = '<i class="fa fa-circle text-danger-glow blink"></i>';
     statusText.textContent = 'Status: Inactive';
+    channelDiv.style.backgroundColor = 'lightcoral'; // Change background color for inactive status
   }
 
 }
@@ -355,6 +473,7 @@ function validateResponse(data,channelItem) {
  // Trigger video playback initialization when the page loads
  window.addEventListener('load', function() {
     initializeVideoPlayback();
+    checkChannelsSequentially();
   });
 </script>
 

@@ -155,40 +155,6 @@
         opacity: 0.2;
       }
     }
-    /* CSS modifications for channel-item checking state and loading spinner */
-    .channel-item.checking {
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Add a shadow effect */
-      border: 2px solid #3498db; /* Change border color as desired */
-      transition: box-shadow 0.3s ease-in-out, border 0.3s ease-in-out; /* Add transition effect */
-    }
-     /* CSS modifications for channel-item checking state and loading spinner */
-    .channel-item.checking {
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Add a shadow effect */
-      border: 2px solid #3498db; /* Change border color as desired */
-      transition: box-shadow 0.3s ease-in-out, border 0.3s ease-in-out; /* Add transition effect */
-    }
-
-    .loading-spinner {
-      width: 30px;
-      height: 30px;
-      border: 4px solid rgba(0, 0, 0, 0.1);
-      border-radius: 50%;
-      border-top: 4px solid #3498db; /* Change the color as desired */
-      animation: spin 1s linear infinite; /* Apply a rotation animation */
-      display: none; /* Initially hide the spinner */
-    }
-
-    /* Animation for the spinner */
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    .channel-item.checking .loading-spinner {
-      display: block;
-    }
-
-
   </style>
   <title>Toffee Monitoring App</title>
 </head>
@@ -208,21 +174,19 @@
     
   <div class="mosaic-container">
 
-   @foreach($cprofile_list as $channel)
+    @foreach($cprofile_list as $channel)
     <div class="channel-item" id="channel{{ $channel->id }}">
         <a href="#" class="playButton" data-channel-link="{{ $channel->Profile_link }}">
             <img src="{{ url('upload/images/'.$channel->image) }}" class="brand-image elevation-3" style="opacity: .8; border-left-style: solid; margin-left: 25px; border-left-width: 0px; height: 40x; width:60px; margin-top: 10px;">
-          </a>      
+        </a>      
         <div class="channel-name" style="text-align: center;">{{ $channel->cname->name }}</div>
         <div class="channel-status">
-            <span class="channel-light light-green"></span> <!-- Remove unnecessary </i> tag -->
-            <span class="status">Status: Active</span>
-        </div>
-        <div class="loading-spinner"></div> <!-- Loading spinner HTML -->
-
+          <span class="channel-light light-green"></i></span>
+          <span class="status">Status: Active</span>
+      </div>
+  
     </div>
 @endforeach
-
  
     <!-- Modal for video playback -->
     <div id="videoModal" class="modal">
@@ -242,63 +206,31 @@
 function checkChannelStatus(channelItem) {
   var playButton = channelItem.querySelector('.playButton');
   var channelLink = playButton.dataset.channelLink;
-  var spinner = channelItem.querySelector('.loading-spinner'); // Get the spinner element
 
-  spinner.style.display = 'block'; // Show the spinner for the current channel
-  hideSpinnersExcept(channelItem); // Hide spinners for other channels
-
-  return new Promise((resolve, reject) => {
-    fetchChannelLink(channelLink, channelItem)
-      .then(() => {
-        spinner.style.display = 'none'; // Hide the spinner when checking is complete
-        resolve();
-      })
-      .catch(error => {
-        spinner.style.display = 'none'; // Hide the spinner if an error occurs during checking
-        reject(error);
-      });
-  });
+  fetchChannelLink(channelLink, channelItem);
 }
 
-function hideSpinnersExcept(currentChannelItem) {
-  var channelItems = document.querySelectorAll('.channel-item');
-  channelItems.forEach(item => {
-    var spinner = item.querySelector('.loading-spinner');
-    if (item !== currentChannelItem) {
-      spinner.style.display = 'none'; // Hide spinners for other channels
-    }
-  });
-}
-
-function checkChannelsSequentially() {
+function continuouslyCheckChannels() {
   var channelItems = document.querySelectorAll('.channel-item');
   var index = 0;
 
-  function startChecking() {
-    var checkInterval = setInterval(() => {
-      if (index < channelItems.length) {
-        checkChannelStatus(channelItems[index])
-          .then(() => {
-            index++;
-          })
-          .catch(error => {
-            console.error('Error checking channel:', error);
-            index++;
-          });
-      } else {
-        clearInterval(checkInterval); // Stop when all channels are checked
-        index = 0; // Reset index to start checking from the first channel
-        startChecking(); // Restart the checking process
-      }
-    
-    }, 9000); // Check every 5 seconds
+  function checkNextChannel() {
+    if (index < channelItems.length) {
+      checkChannelStatus(channelItems[index]);
+      index++;
+    } else {
+      index = 0; // Reset the index to start checking from the beginning
+    }
+
+    // Continue checking the next channel immediately after a brief delay
+    setTimeout(checkNextChannel, 0);
   }
 
-  // Start checking channels
-  startChecking();
+  setInterval(() => {
+    checkNextChannel();
+  }, 5000); // Check all channels every 5 seconds
 }
-
-  function initializeVideoPlayback() {
+    function initializeVideoPlayback() {
     var channelItems = document.querySelectorAll('.channel-item');
     channelItems.forEach(function(channelItem) {
       var playButton = channelItem.querySelector('.playButton');
@@ -307,7 +239,16 @@ function checkChannelsSequentially() {
     });
   }
 
-
+// Open modal and play video when play button is clicked
+var playButtons = document.querySelectorAll('.playButton');
+    playButtons.forEach(function(playButton) {
+      playButton.addEventListener('click', function() {
+        document.getElementById('videoModal').style.display = 'block';
+        var channelLink = this.dataset.channelLink; // Fetching data-channel-link attribute from the clicked element
+        playVideo(channelLink); // Function to start video playback
+       
+      });
+    });
 
     // Fetch and log the response from the channel link
 function fetchChannelLink(channelLink,channelItem) {
@@ -358,76 +299,63 @@ function generateFullURLs(responseText, baseURL) {
 }
 
 // Function to fetch responses from all URLs and log them
-// Modify the existing function to fetch and validate all URLs for a channel
-function fetchAndValidateAllUrls(urls, channelItem) {
-  const promises = urls.map(url => fetch(url)
+function fetchAndLogAllResponses(urls,channelItem) {
+  for (let i = 0; i < urls.length; i++) {
+    fetchAndLogResponse(urls[i],channelItem);
+  }
+}
+
+function fetchAndLogResponse(url,channelItem) {
+  fetch(url)
     .then(response => {
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
       return response.text();
     })
-    .then(data => validateResponse(data))
+    .then(data => {
+      console.log(`Response from ${url}:`);
+      console.log(data);
+      validateResponse(data,channelItem);
+      // You can further process or handle the response data here as needed
+    })
     .catch(error => {
       console.error(`There was a problem with the fetch operation for ${url}:`, error);
-      return 'Invalid'; // Return 'Invalid' status if there's an error
-    }));
-
-  Promise.all(promises)
-    .then(results => {
-      const status = results.includes('Invalid') ? 'Inactive' : 'Active';
-      updateChannelStatus(channelItem, status);
     });
 }
 
-// Modify the validateResponse function to return the validation result
-function validateResponse(data) {
+function validateResponse(data,channelItem) {
   const lines = data.split('\n');
-  const requiredParameters = ['#EXTM3U', '#EXT-X-VERSION:3', '#EXT-X-MEDIA-SEQUENCE', '#EXT-X-TARGETDURATION', '#EXT-X-KEY'];
-  const presentParameters = requiredParameters.filter(param => lines.some(line => line.startsWith(param)));
-  const tsFiles = lines.filter(line => line.endsWith('.ts'));
-  const isKeyMethodPresent = lines.some(line => line.includes('EXT-X-KEY:METHOD=AES-128'));
-
-  if (presentParameters.length === requiredParameters.length && tsFiles.length > 0 && isKeyMethodPresent) {
-    return 'Valid';
-  } else {
-    return 'Invalid';
-  }
-}
-
-// Update channel status based on the collective validation result
-function updateChannelStatus(channelItem, status) {
   const light = channelItem.querySelector('.channel-light');
   const statusText = channelItem.querySelector('.status');
   const channelDiv = channelItem;
 
-  if (status === 'Active') {
+  // Validate required parameters
+  const requiredParameters = ['#EXTM3U', '#EXT-X-VERSION:3', '#EXT-X-MEDIA-SEQUENCE', '#EXT-X-TARGETDURATION', '#EXT-X-KEY'];
+  const presentParameters = requiredParameters.filter(param => lines.some(line => line.startsWith(param)));
+
+  // Validate if any .ts files are present
+  const tsFiles = lines.filter(line => line.endsWith('.ts'));
+  // Additional custom validation checks
+  const isKeyMethodPresent = lines.some(line => line.includes('EXT-X-KEY:METHOD=AES-128'));
+  if (presentParameters.length === requiredParameters.length && tsFiles.length > 0 && isKeyMethodPresent) {
+    console.log('Validation successful: All required parameters present and .ts files found.');
+        // Validation successful
     light.classList.remove('light-red');
     light.classList.add('light-green');
     statusText.textContent = 'Status: Active';
-    channelDiv.style.backgroundColor = 'lightgreen';
+   // channelDiv.style.backgroundColor = 'lightgreen'; // Change background color for active status
   } else {
-    light.classList.remove('light-green');
-    light.innerHTML = '<i class="fa fa-circle text-danger-glow blink"></i>';
+    console.log('Validation failed: Missing required parameters or no .ts files found.');
+     // Validation failed
+     light.classList.remove('light-green');
+    // light.innerHTML = '<i class="fa fa-circle text-danger-glow blink"></i>';
+    light.classList.add('light-red');
     statusText.textContent = 'Status: Inactive';
-    channelDiv.style.backgroundColor = 'lightcoral';
+    channelDiv.style.backgroundColor = 'lightcoral'; // Change background color for inactive status
   }
-}
 
-// Modify the existing function where all responses are fetched and validated
-function fetchAndLogAllResponses(urls, channelItem) {
-  fetchAndValidateAllUrls(urls, channelItem);
 }
-// Open modal and play video when play button is clicked
-  var playButtons = document.querySelectorAll('.playButton');
-    playButtons.forEach(function(playButton) {
-      playButton.addEventListener('click', function() {
-        document.getElementById('videoModal').style.display = 'block';
-        var channelLink = this.dataset.channelLink; // Fetching data-channel-link attribute from the clicked element
-        playVideo(channelLink); // Function to start video playback
-       
-      });
-    });
 
     // Close modal when close button is clicked
     document.querySelector('.close').addEventListener('click', function() {
@@ -476,7 +404,7 @@ function fetchAndLogAllResponses(urls, channelItem) {
  // Trigger video playback initialization when the page loads
  window.addEventListener('load', function() {
     initializeVideoPlayback();
-    checkChannelsSequentially();
+    continuouslyCheckChannels();
   });
 </script>
 

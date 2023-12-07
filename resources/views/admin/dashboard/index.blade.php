@@ -42,7 +42,7 @@
   </div>
 </div>
 
-  <script>
+<script>
 
 function initializeVideoPlayback() {
     var channelItems = document.querySelectorAll('.img-fluid');
