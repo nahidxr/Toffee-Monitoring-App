@@ -170,10 +170,7 @@
         Dashboard
     </a>
 </header>
-
-    
   <div class="mosaic-container">
-
     @foreach($cprofile_list as $channel)
     <div class="channel-item" id="channel{{ $channel->id }}">
         <a href="#" class="playButton" data-channel-link="{{ $channel->Profile_link }}">
@@ -187,7 +184,6 @@
   
     </div>
 @endforeach
- 
     <!-- Modal for video playback -->
     <div id="videoModal" class="modal">
         <div class="modal-content" style="width: 400px;height: 400px;">
@@ -195,21 +191,22 @@
           <div id="rmp" style="display: block;"></div>
         </div>
       </div>
-{{-- script start --}}
+
+
+
+
 
 <!-- Include Radiant Media Player JavaScript library -->
 <script src="https://cdn.radiantmediatechs.com/rmp/9.12.0/js/rmp-hlsjs.min.js"></script>
 
 <!-- Add a div container with a unique id - video and UI elements will be appended to this container -->
 <script>
-
 function checkChannelStatus(channelItem) {
   var playButton = channelItem.querySelector('.playButton');
   var channelLink = playButton.dataset.channelLink;
 
   fetchChannelLink(channelLink, channelItem);
 }
-
 function continuouslyCheckChannels() {
   var channelItems = document.querySelectorAll('.channel-item');
   var index = 0;
@@ -221,11 +218,9 @@ function continuouslyCheckChannels() {
     } else {
       index = 0; // Reset the index to start checking from the beginning
     }
-
     // Continue checking the next channel immediately after a brief delay
     setTimeout(checkNextChannel, 0);
   }
-
   setInterval(() => {
     checkNextChannel();
   }, 5000); // Check all channels every 5 seconds
@@ -239,18 +234,7 @@ function continuouslyCheckChannels() {
     });
   }
 
-// Open modal and play video when play button is clicked
-var playButtons = document.querySelectorAll('.playButton');
-    playButtons.forEach(function(playButton) {
-      playButton.addEventListener('click', function() {
-        document.getElementById('videoModal').style.display = 'block';
-        var channelLink = this.dataset.channelLink; // Fetching data-channel-link attribute from the clicked element
-        playVideo(channelLink); // Function to start video playback
-       
-      });
-    });
-
-    // Fetch and log the response from the channel link
+// Fetch and log the response from the channel link
 function fetchChannelLink(channelLink,channelItem) {
   fetch(channelLink)
     .then(response => {
@@ -288,23 +272,18 @@ function generateFullURLs(responseText, baseURL) {
         const fileName = regexResult[1];
         const bitrate = regexResult[2];
         const channel = regexResult[3];
-
         fullURLs.push(`${baseURL}${channel}/${fileName}?bitrate=${bitrate}&channel=${channel}&gp_id=`);
       }
     }
   }
-
   return fullURLs;
-  
 }
-
 // Function to fetch responses from all URLs and log them
 function fetchAndLogAllResponses(urls,channelItem) {
   for (let i = 0; i < urls.length; i++) {
     fetchAndLogResponse(urls[i],channelItem);
   }
 }
-
 function fetchAndLogResponse(url,channelItem) {
   fetch(url)
     .then(response => {
@@ -356,6 +335,16 @@ function validateResponse(data,channelItem) {
   }
 
 }
+  // Open modal and play video when play button is clicked
+  var playButtons = document.querySelectorAll('.playButton');
+    playButtons.forEach(function(playButton) {
+      playButton.addEventListener('click', function() {
+        document.getElementById('videoModal').style.display = 'block';
+        var channelLink = this.dataset.channelLink; // Fetching data-channel-link attribute from the clicked element
+        playVideo(channelLink); // Function to start video playback
+       
+      });
+    });
 
     // Close modal when close button is clicked
     document.querySelector('.close').addEventListener('click', function() {
@@ -364,12 +353,8 @@ function validateResponse(data,channelItem) {
     });
 
     // Function to start video playback
-    function playVideo(channelLink) {
-      // console.log(channelLink);
-
+  function playVideo(channelLink) {
       const src = {
-        // console.log(channelLink);
-       
        hls: channelLink
         
       };

@@ -291,13 +291,12 @@ function checkChannelsSequentially() {
         startChecking(); // Restart the checking process
       }
     
-    }, 9000); // Check every 5 seconds
+    }, 5000); // Check every 5 seconds
   }
 
   // Start checking channels
   startChecking();
 }
-
   function initializeVideoPlayback() {
     var channelItems = document.querySelectorAll('.channel-item');
     channelItems.forEach(function(channelItem) {
@@ -306,10 +305,7 @@ function checkChannelsSequentially() {
       fetchChannelLink(channelLink,channelItem);
     });
   }
-
-
-
-    // Fetch and log the response from the channel link
+// Fetch and log the response from the channel link
 function fetchChannelLink(channelLink,channelItem) {
   fetch(channelLink)
     .then(response => {
@@ -437,13 +433,8 @@ function fetchAndLogAllResponses(urls, channelItem) {
 
     // Function to start video playback
     function playVideo(channelLink) {
-      // console.log(channelLink);
-
       const src = {
-        // console.log(channelLink);
-       
        hls: channelLink
-        
       };
       const settings = {
         licenseKey: 'ZW5ieGlkcGtna0AxNjQwODAz',
