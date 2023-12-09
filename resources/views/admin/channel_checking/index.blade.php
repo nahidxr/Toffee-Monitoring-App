@@ -411,15 +411,18 @@ function validateResponse(data, channel,channelItem) {
 
   } else {
 
-    const myDiv = channelItem.querySelector('.mybutton');
-    const myButton = channelItem.createElement("button");
-    myButton.textContent = "160";
+     const myDiv = channelItem.querySelector('.mybutton');
+
+    // Create a button element
+    const myButton = document.createElement("button");
+    myButton.textContent = lastThreeDigits;
     myButton.style.width = "30px";
     myButton.style.height = "30px";
     myButton.style.backgroundColor = "white";
     myButton.style.border = "none";
     myButton.style.borderRadius = "50%";
-    myButton.textContent = lastThreeDigits;
+
+    // Append the button to myDiv
     myDiv.appendChild(myButton);
     
     return 'Invalid';
