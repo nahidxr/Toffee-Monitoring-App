@@ -215,11 +215,19 @@
             <span class="channel-light light-green"></span> <!-- Remove unnecessary </i> tag -->
             <span class="status">Status: Active</span>
         </div>
-        <!-- Additional small buttons -->
-        <div style="display: flex; justify-content: space-around; margin-top: 10px;">
-          <div id="myDiv" class="mybutton"></div>
-        </div>
-  <!-- End of additional small buttons -->
+        
+       <!-- Additional small buttons -->
+      <div style="display: flex; justify-content: space-around; margin-top: 10px;">
+        <!-- Button 576 -->
+        <button id="button576" type="button" style="width: 30px; height: 30px; background-color: white; border: none; border-radius: 50%;">576</button>
+        
+        <!-- Button 360 -->
+        <button id="button360" type="button" style="width: 30px; height: 30px; background-color: white; border: none; border-radius: 50%;">360</button>
+        
+        <!-- Button 160 -->
+        <button id="button160" type="button" style="width: 30px; height: 30px; background-color: white; border: none; border-radius: 50%;">160</button>
+      </div>
+      <!-- End of additional small buttons -->
       <div class="loading-spinner"></div> <!-- Loading spinner HTML -->
 
     </div>
@@ -338,10 +346,9 @@ function fetchChannelLink(channelLink,channelItem) {
     });
 }
 
-
 function generateFullURLs(responseText, baseURL) {
   const lines = responseText.split('\n');
-  const fullURLsWithChannels = [];
+  const fullURLs = [];
 
   for (let i = 0; i < lines.length; i++) {
     if (lines[i].startsWith('#EXT-X-STREAM-INF:')) {
@@ -351,37 +358,30 @@ function generateFullURLs(responseText, baseURL) {
         const bitrate = regexResult[2];
         const channel = regexResult[3];
 
-        const fullURL = `${baseURL}${channel}/${fileName}?bitrate=${bitrate}&channel=${channel}&gp_id=`;
-       
-        // Push an object with full URL and channel value
-        fullURLsWithChannels.push({
-          fullURL: fullURL,
-          channel: channel
-        });
+        fullURLs.push(`${baseURL}${channel}/${fileName}?bitrate=${bitrate}&channel=${channel}&gp_id=`);
       }
     }
   }
-  return fullURLsWithChannels;
+
+  return fullURLs;
+  
 }
 
-
 // Function to fetch responses from all URLs and log them
+// Modify the existing function to fetch and validate all URLs for a channel
 function fetchAndValidateAllUrls(urls, channelItem) {
-  const promises = urls.map(urlData =>
-    fetch(urlData.fullURL)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`Network response was not ok for ${urlData.fullURL}`);
-        }
-        return response.text();
-      })
-      .then(data => validateResponse(data, urlData.channel,channelItem)) // Pass channel data to validateResponse
-      .catch(error => {
-        console.error(`There was a problem with the fetch operation for ${urlData.fullURL}:`, error);
-        return 'Invalid'; // Return 'Invalid' status if there's an error
-      })
-  );
-
+  const promises = urls.map(url => fetch(url)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.text();
+    })
+    .then(data => validateResponse(data))
+    .catch(error => {
+      console.error(`There was a problem with the fetch operation for ${url}:`, error);
+      return 'Invalid'; // Return 'Invalid' status if there's an error
+    }));
   Promise.all(promises)
     .then(results => {
       const status = results.includes('Invalid') ? 'Inactive' : 'Active';
@@ -390,38 +390,16 @@ function fetchAndValidateAllUrls(urls, channelItem) {
 }
 
 // Modify the validateResponse function to return the validation result
-function validateResponse(data, channel,channelItem) {
- // console.log('Channel:', channel); // Log the channel data
-  const channelParts = channel.split('_'); // Split the channel string by underscore
-  const lastPart = channelParts[channelParts.length - 1]; // Get the last part of the channel
-
-  const lastThreeDigits = lastPart.slice(-3); // Extract the last three digits
-
-  //console.log('Last three digits:', lastThreeDigits); // Log the last three digits
- 
- 
+function validateResponse(data) {
   const lines = data.split('\n');
   const requiredParameters = ['#EXTM3U', '#EXT-X-VERSION:3', '#EXT-X-MEDIA-SEQUENCE', '#EXT-X-TARGETDURATION', '#EXT-X-KEY'];
   const presentParameters = requiredParameters.filter(param => lines.some(line => line.startsWith(param)));
   const tsFiles = lines.filter(line => line.endsWith('.ts'));
   const isKeyMethodPresent = lines.some(line => line.includes('EXT-X-KEY:METHOD=AES-128'));
 
-  if (presentParameters.length === requiredParameters.length && tsFiles.length > 0 && isKeyMethodPresent && channel) {
+  if (presentParameters.length === requiredParameters.length && tsFiles.length > 0 && isKeyMethodPresent) {
     return 'Valid';
-
   } else {
-
-    const myDiv = channelItem.querySelector('.mybutton');
-    const myButton = channelItem.createElement("button");
-    myButton.textContent = "160";
-    myButton.style.width = "30px";
-    myButton.style.height = "30px";
-    myButton.style.backgroundColor = "white";
-    myButton.style.border = "none";
-    myButton.style.borderRadius = "50%";
-    myButton.textContent = lastThreeDigits;
-    myDiv.appendChild(myButton);
-    
     return 'Invalid';
   }
 }
