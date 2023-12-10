@@ -297,7 +297,7 @@ function checkChannelsSequentially() {
 
       }
     
-    }, 1000); // Check every 5 seconds
+    }, 5000); // Check every 5 seconds
   }
 
   // Start checking channels
@@ -407,6 +407,17 @@ function validateResponse(data, channel,channelItem) {
   const isKeyMethodPresent = lines.some(line => line.includes('EXT-X-KEY:METHOD=AES-128'));
 
   if (presentParameters.length === requiredParameters.length && tsFiles.length > 0 && isKeyMethodPresent && channel) {
+
+  const myDiv = channelItem.querySelector('.mybutton');
+  const existingButtons = myDiv.querySelectorAll('button');
+
+  // Check if any existing button has the same lastThreeDigits
+  const existingButtonWithSameDigits = Array.from(existingButtons).find(button => button.textContent === lastThreeDigits);
+
+  if (existingButtonWithSameDigits) {
+    // If a button with the same lastThreeDigits exists, remove it
+    myDiv.removeChild(existingButtonWithSameDigits);
+  }
     return 'Valid';
 
   }
