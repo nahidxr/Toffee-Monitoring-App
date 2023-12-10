@@ -289,9 +289,9 @@ function checkChannelsSequentially() {
       } else {
         clearInterval(checkInterval); // Stop when all channels are checked
         index = 0; // Reset index to start checking from the first channel
-        // setTimeout(() => {
-        //   location.reload(); // Reload the page after all channels have been checked
-        // }, 9000); // Adjust the time before reload (in milliseconds)
+        setTimeout(() => {
+          location.reload(); // Reload the page after all channels have been checked
+        }, 2000); // Adjust the time before reload (in milliseconds)
 
         startChecking();
 
@@ -409,11 +409,19 @@ function validateResponse(data, channel,channelItem) {
   if (presentParameters.length === requiredParameters.length && tsFiles.length > 0 && isKeyMethodPresent && channel) {
     return 'Valid';
 
+  }
+  else {
+  const myDiv = channelItem.querySelector('.mybutton');
+  const existingButtons = myDiv.querySelectorAll('button');
+
+  // Check if any existing button has the same lastThreeDigits
+  const hasSameLastThreeDigits = Array.from(existingButtons).some(button => button.textContent === lastThreeDigits);
+
+  if (hasSameLastThreeDigits) {
+    // If any button has the same lastThreeDigits, return 'Invalid'
+    return 'Invalid';
   } else {
-
-     const myDiv = channelItem.querySelector('.mybutton');
-
-    // Create a button element
+    // If no button exists with the same lastThreeDigits, create a new button
     const myButton = document.createElement("button");
     myButton.textContent = lastThreeDigits;
     myButton.style.width = "30px";
@@ -424,9 +432,12 @@ function validateResponse(data, channel,channelItem) {
 
     // Append the button to myDiv
     myDiv.appendChild(myButton);
-    
+
     return 'Invalid';
   }
+}
+
+
 }
 
 // Update channel status based on the collective validation result
@@ -506,7 +517,7 @@ function fetchAndLogAllResponses(urls, channelItem) {
  // Trigger video playback initialization when the page loads
  window.addEventListener('load', function() {
     initializeVideoPlayback();
-    // checkChannelsSequentially();
+   checkChannelsSequentially();
   });
 </script>
 
