@@ -169,26 +169,42 @@
     }
 
     .loading-spinner {
-      width: 30px;
-      height: 30px;
-      border: 4px solid rgba(0, 0, 0, 0.1);
-      border-radius: 50%;
-      border-top: 4px solid #3498db; /* Change the color as desired */
-      animation: spin 1s linear infinite; /* Apply a rotation animation */
-      display: none; /* Initially hide the spinner */
-    }
+    width: 80px;
+    height: 80px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    display: none; /* Initially hide the spinner */
+  }
 
-    /* Animation for the spinner */
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
+  .loading-spinner .bar {
+    width: 10px;
+    height: 30px;
+    background-color: #3498db; /* Change the color as desired */
+    position: absolute;
+    top: 25px;
+    animation: barSpin 1.2s linear infinite;
+  }
 
-    .channel-item.checking .loading-spinner {
-      display: block;
-    }
+  .loading-spinner .bar:nth-child(2) {
+    transform: rotate(120deg);
+    animation-delay: -0.4s;
+  }
 
+  .loading-spinner .bar:nth-child(3) {
+    transform: rotate(240deg);
+    animation-delay: -0.8s;
+  }
 
+  @keyframes barSpin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  .channel-item.checking .loading-spinner {
+    display: block;
+  }
   </style>
   <title>Toffee Monitoring App</title>
 </head>
@@ -220,7 +236,11 @@
           <div id="myDiv" class="mybutton"></div>
         </div>
   <!-- End of additional small buttons -->
-      <div class="loading-spinner"></div> <!-- Loading spinner HTML -->
+  <div class="loading-spinner">
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+  </div> <!-- Loading spinner HTML -->
 
     </div>
 @endforeach
@@ -294,7 +314,6 @@ function checkChannelsSequentially() {
         }, 2000); // Adjust the time before reload (in milliseconds)
 
         startChecking();
-
       }
     
     }, 5000); // Check every 5 seconds
