@@ -22,6 +22,7 @@
           <th>#</th>
           <th>Channel Logo</th>
           <th>Channel Name</th>
+          <th>Service Name</th>
           <th>Channel status</th>
         </tr>
       </thead>
@@ -34,6 +35,7 @@
           <td>{{ $counter++ }}</td>
           <td><img src="{{ url('upload/images/'.$item->image) }}" alt="Image" class="img-fluid" width="35" height="25" data-channel-link="{{ $item->Profile_link }}"></td>
           <td>{{ $item->cname->name }}</td>
+          <td>{{ \App\Enums\Service::getDescription($item->service_name) }}</td>
           <td class="status"><!-- Status will be updated dynamically --></td>
         </tr>
         @endforeach
@@ -131,18 +133,18 @@ function validateResponse(data, channelItem) {
     const lines = data.split('\n');
     const statusText = channelItem.querySelector('.status');
      // Validate required parameters
-  const requiredParameters = ['#EXTM3U', '#EXT-X-VERSION:3', '#EXT-X-MEDIA-SEQUENCE', '#EXT-X-TARGETDURATION', '#EXT-X-KEY'];
-  const presentParameters = requiredParameters.filter(param => lines.some(line => line.startsWith(param)));
+     const requiredParameters = ['#EXTM3U', '#EXT-X-VERSION:3', '#EXT-X-MEDIA-SEQUENCE', '#EXT-X-TARGETDURATION', '#EXT-X-KEY'];
+     const presentParameters = requiredParameters.filter(param => lines.some(line => line.startsWith(param)));
+     const tsFiles = lines.filter(line => line.endsWith('.ts'));
+     const isKeyMethodPresent = lines.some(line => line.includes('EXT-X-KEY:METHOD=AES-128'));
 
-  // Validate if any .ts files are present
-  const tsFiles = lines.filter(line => line.endsWith('.ts'));
 
-    if (presentParameters.length === requiredParameters.length && tsFiles.length > 0) {
-      console.log('Validation successful: All required parameters present and .ts files found.');
+    if (presentParameters.length === requiredParameters.length && tsFiles.length > 0 && isKeyMethodPresent) {
+      // console.log('Validation successful: All required parameters present and .ts files found.');
       // Validation successful
       statusText.innerHTML = '<span style="color: green;"><i class="fas fa-check-circle"></i> Status: Active</span>';
     } else {
-      console.log('Validation failed: Missing required parameters or no .ts files found.');
+      // console.log('Validation failed: Missing required parameters or no .ts files found.');
       // Validation failed
       statusText.innerHTML = '<span style="color: red;"><i class="fas fa-times-circle"></i> Status: Inactive</span>';
     }

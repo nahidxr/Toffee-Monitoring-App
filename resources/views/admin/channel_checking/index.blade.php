@@ -310,10 +310,12 @@ function checkChannelsSequentially() {
       } else {
         clearInterval(checkInterval); // Stop when all channels are checked
         index = 0; // Reset index to start checking from the first channel
-        // setTimeout(() => {
-        //   location.reload(); // Reload the page after all channels have been checked
-        // }, 2000); // Adjust the time before reload (in milliseconds)
+        setTimeout(() => {
+          location.reload(); // Reload the page after all channels have been checked
+        }, 2000); // Adjust the time before reload (in milliseconds)
 
+        // Make an AJAX request to reload content without full page refresh
+        // reloadContent();
         startChecking();
       }
     
@@ -323,6 +325,29 @@ function checkChannelsSequentially() {
   // Start checking channels
   startChecking();
 }
+
+// Function to reload content using AJAX
+function reloadContent() {
+  // Make an AJAX request to the server endpoint for reloading content
+  var xhr = new XMLHttpRequest();
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState === XMLHttpRequest.DONE) {
+      if (xhr.status === 200) {
+        // Successful reload, update content or handle as needed
+        console.log('Content reloaded successfully!');
+      } else {
+        console.error('Error reloading content:', xhr.status);
+      }
+    }
+  };
+
+  // Perform a GET request to the server endpoint for content reload
+  xhr.open('GET', '/channel_checking', true);
+  xhr.send();
+}
+
+
+
   function initializeVideoPlayback() {
     var channelItems = document.querySelectorAll('.channel-item');
     channelItems.forEach(function(channelItem) {

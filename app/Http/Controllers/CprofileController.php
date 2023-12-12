@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ChannelStatus;
+use App\Enums\Service;
 use App\Models\Cname;
 use App\Models\Cprofile;
 use Illuminate\Broadcasting\Channel;
@@ -23,6 +24,7 @@ class CprofileController extends Controller
     public function create()
     {
         $data["channel_status"] = ChannelStatus::asSelectArray();
+        $data["service_name"] = Service::asSelectArray();
         $data["channel_list"] = Cname::get();
         $data["channel_profile_list"] = Cprofile::get();
         return view('admin.channel_profile.create',$data);
@@ -36,6 +38,8 @@ class CprofileController extends Controller
         $data->channel_name_id = $request->channel_name_id;
         $data->Profile_link = $request->plink;
         $data->status = $request->status;
+        $data->service_name = $request->service_name;
+        $data->transcoder_info = $request->transcoder_info;
         
         if ($request->hasFile('image')) {
             $file = $request->file('image');
@@ -69,6 +73,7 @@ class CprofileController extends Controller
         }
         $data["channel_profile_list"] = $cProfile;
         $data["channel_status"] = ChannelStatus::asSelectArray();
+        $data["service_name_list"] = Service::asSelectArray();
         $data["channel_name_list"] = Cname::get();
 
         return view("admin.channel_profile.edit", $data);
@@ -85,6 +90,8 @@ class CprofileController extends Controller
         $data->channel_name_id = $request->channel_name_id;
         $data->Profile_link = $request->plink;
         $data->status = $request->status;
+        $data->service_name = $request->service_name;
+        $data->transcoder_info = $request->transcoder_info;
 
         if ($request->hasFile('image')) {
             $destination = 'upload/images/' . $data->image;

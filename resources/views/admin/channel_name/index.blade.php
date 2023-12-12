@@ -10,7 +10,7 @@
     <ol class="breadcrumb float-sm-right">
       <li class="breadcrumb-item"><a href="{{ url('#') }}">Dashboard</a></li>
       {{-- <li class="breadcrumb-item"><a href="{{ url('/admin/dashboard') }}">Dashboard</a></li> --}}
-      <li class="breadcrumb-item active">Channel Name</li>
+      <li class="breadcrumb-item active">Programme Name</li>
     </ol>
   </div>
 </div>

@@ -38,19 +38,36 @@
                     </select>
               </div>
               <div class="form-group">
-                <label for="exampleInputEmail1">Profile Name</label>
+                <label for="exampleInputEmail1">FLV Name</label>
                 <input type="text" class="form-control" name="pname" id="pName" value="{{ $channel_profile_list->Profile_name }}" placeholder="Enter Profile Name">
               </div>
               <div class="form-group">
-                <label for="exampleInputEmail1">Profile Link</label>
+                <label for="exampleInputEmail1">URL</label>
                 <input type="text" class="form-control" name="plink" id="plink" value="{{ $channel_profile_list->Profile_link }}" placeholder="Enter Profile Link">
+              </div>
+
+              {{-- service name --}}
+              <div class="form-group">
+                <label  for="channel">Service Name</label>
+                    <select name="service_name" class="form-control">
+                        <option value="">Select a Service</option>
+                        @foreach ($service_name_list as $x=>$service)
+                        <option value="{{ $x }}" {{ $channel_profile_list->service_name==$x ? 'selected' : ''}}>{{ $service }}
+                        </option>
+                        @endforeach
+                    </select>
+              </div>
+
+              {{-- transcode Info --}}
+              <div class="form-group">
+                <label for="exampleInputEmail1">Transcoder Info</label>
+                <input type="text" class="form-control" name="transcoder_info" id="transcoder" value="{{ $channel_profile_list->transcoder_info }}" placeholder="Enter Transcoder Info">
               </div>
               {{-- channel status --}}
               <div class="form-group">
-                <label  for="channel">Channe Status</label>
+                <label  for="channel">Link Status</label>
                     <select name="status" class="form-control">
                         <option value="">Select a Channel</option>
-        
                         @foreach ($channel_status as $x=>$status)
                         <option value="{{ $x }}" {{ $channel_profile_list->status==$x ? 'selected' : ''}}>{{ $status }}
                         </option>

@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('Profile_link');
             $table->integer('status')->default(0);
             $table->string('image');
+            $table->integer('service_name')->default(0);
+            $table->string('transcoder_info');
             $table->timestamps();
         });
     }

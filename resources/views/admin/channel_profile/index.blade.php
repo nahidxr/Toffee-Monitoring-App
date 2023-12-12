@@ -48,11 +48,13 @@
         <thead>
           <tr>
             <th>#</th>
-            <th>Channel Logo</th>
+            <th>Logo</th>
             <th>Channel Name</th>
-            <th>Profile Name</th>
-            <th>Channel link</th>
-            <th>Channel Status</th>
+            <th>FLV Name</th>
+            <th>URL</th>
+            <th>Service Name</th>
+            <th>Transcode Info</th>
+            <th>Link Status</th>
             <th>Action</th>
           </tr>
         </thead>
@@ -66,7 +68,19 @@
                 <td><img src="{{ url('upload/images/'.$item->image) }}" alt="Image" class="img-fluid" width="50" height="40"></td>
                 <td>{{ $item->cname->name }}</td>
                 <td>{{ $item->Profile_name }}</td>
-                <td>{{ $item->Profile_link }}</td>
+                {{-- <td>{{ $item->Profile_link }}</td> --}}
+                <td>
+                  <a href="{{ $item->Profile_link }}">
+                      Channel Link <i class="fas fa-external-link-alt"></i>
+                  </a>
+              </td>
+                <td>{{ \App\Enums\Service::getDescription($item->service_name) }}</td>
+                {{-- <td>{{ $item->transcoder_info }}</td>--}}
+                <td>
+                  <a href="{{ $item->transcoder_info }}">
+                      Transcoder Link <i class="fas fa-external-link-alt"></i>
+                  </a>
+              </td>
                 @if($item->status === \App\Enums\ChannelStatus::Active)
                 <td>
                   <span style="color: green;"><i class="fas fa-check-circle"></i> {{ \App\Enums\ChannelStatus::getDescription($item->status) }}</span>
@@ -78,6 +92,8 @@
                 @else
                 <td>{{ \App\Enums\ChannelStatus::getDescription($item->status) }}</td>
                @endif
+              
+
                 <td>
                   <div class="btn-group" role="group">
                     <a href="{{ url("/channel_profile/$item->id/edit") }}" class="btn btn-primary btn-sm">Update</a>    
