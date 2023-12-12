@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="csrf-token" content="{{ csrf_token() }}">
   <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
   <style>
     body {
@@ -317,7 +316,7 @@ function checkChannelsSequentially() {
         startChecking();
       }
     
-    }, 1000); // Check every 5 seconds
+    }, 2000); // Check every 5 seconds
   }
 
   // Start checking channels
@@ -409,41 +408,17 @@ function fetchAndValidateAllUrls(urls, channelItem) {
     });
 }
 
+// Modify the validateResponse function to return the validation result
+function validateResponse(data, channel,channelItem) {
+ // console.log('Channel:', channel); // Log the channel data
+  const channelParts = channel.split('_'); // Split the channel string by underscore
+  const lastPart = channelParts[channelParts.length - 1]; // Get the last part of the channel
 
-function sendSlackNotification(channelData) {
-  fetch('/send-slack-notification', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-CSRF-TOKEN': getCSRFToken(), // Function to retrieve the CSRF token
-    },
-    body: JSON.stringify({ channelData }),
-  })
-  .then(response => {
-    console.log('Slack notification sent:', response);
-  })
-  .catch(error => {
-    console.error('Error sending Slack notification:', error);
-  });
-}
+  const lastThreeDigits = lastPart.slice(-3); // Extract the last three digits
 
-function getCSRFToken() {
-  const metaTag = document.querySelector('meta[name="csrf-token"]');
-  if (metaTag) {
-    return metaTag.content;
-  }
-  return null;
-}
-
-
-// Retrieve the list of previously notified invalid channels from localStorage
-let notifiedInvalidChannels = JSON.parse(localStorage.getItem('notifiedInvalidChannels')) || [];
-
-function validateResponse(data, channel, channelItem) {
-  const channelParts = channel.split('_');
-  const lastPart = channelParts[channelParts.length - 1];
-  const lastThreeDigits = lastPart.slice(-3);
-
+  //console.log('Last three digits:', lastThreeDigits); // Log the last three digits
+ 
+ 
   const lines = data.split('\n');
   const requiredParameters = ['#EXTM3U', '#EXT-X-VERSION:3', '#EXT-X-MEDIA-SEQUENCE', '#EXT-X-TARGETDURATION', '#EXT-X-KEY'];
   const presentParameters = requiredParameters.filter(param => lines.some(line => line.startsWith(param)));
@@ -451,51 +426,49 @@ function validateResponse(data, channel, channelItem) {
   const isKeyMethodPresent = lines.some(line => line.includes('EXT-X-KEY:METHOD=AES-128'));
 
   if (presentParameters.length === requiredParameters.length && tsFiles.length > 0 && isKeyMethodPresent && channel) {
-    const myDiv = channelItem.querySelector('.mybutton');
-    const existingButtons = myDiv.querySelectorAll('button');
-    const existingButtonWithSameDigits = Array.from(existingButtons).find(button => button.textContent === lastThreeDigits);
 
-    if (existingButtonWithSameDigits) {
-      myDiv.removeChild(existingButtonWithSameDigits);
-    }
+  const myDiv = channelItem.querySelector('.mybutton');
+  const existingButtons = myDiv.querySelectorAll('button');
 
-    // Channel is valid, so clear it from the notifiedInvalidChannels array
-    notifiedInvalidChannels = notifiedInvalidChannels.filter(invalidChannel => invalidChannel !== channel);
-    
-    // Store updated list of notifiedInvalidChannels in localStorage
-    localStorage.setItem('notifiedInvalidChannels', JSON.stringify(notifiedInvalidChannels));
+  // Check if any existing button has the same lastThreeDigits
+  const existingButtonWithSameDigits = Array.from(existingButtons).find(button => button.textContent === lastThreeDigits);
 
+  if (existingButtonWithSameDigits) {
+    // If a button with the same lastThreeDigits exists, remove it
+    myDiv.removeChild(existingButtonWithSameDigits);
+  }
     return 'Valid';
+
+  }
+  else {
+  const myDiv = channelItem.querySelector('.mybutton');
+  const existingButtons = myDiv.querySelectorAll('button');
+
+  // Check if any existing button has the same lastThreeDigits
+  const hasSameLastThreeDigits = Array.from(existingButtons).some(button => button.textContent === lastThreeDigits);
+
+  if (hasSameLastThreeDigits) {
+    // If any button has the same lastThreeDigits, return 'Invalid'
+    return 'Invalid';
   } else {
-    const myDiv = channelItem.querySelector('.mybutton');
-    const existingButtons = myDiv.querySelectorAll('button');
-    const hasSameLastThreeDigits = Array.from(existingButtons).some(button => button.textContent === lastThreeDigits);
+    // If no button exists with the same lastThreeDigits, create a new button
+    const myButton = document.createElement("button");
+    myButton.textContent = lastThreeDigits;
+    myButton.style.width = "30px";
+    myButton.style.height = "30px";
+    myButton.style.backgroundColor = "white";
+    myButton.style.border = "none";
+    myButton.style.borderRadius = "50%";
 
-    if (hasSameLastThreeDigits) {
-      return 'Invalid';
-    } else {
-      const myButton = document.createElement("button");
-      myButton.textContent = lastThreeDigits;
-      myButton.style.width = "30px";
-      myButton.style.height = "30px";
-      myButton.style.backgroundColor = "white";
-      myButton.style.border = "none";
-      myButton.style.borderRadius = "50%";
-      myDiv.appendChild(myButton);
+    // Append the button to myDiv
+    myDiv.appendChild(myButton);
 
-      // Only send Slack notification if the channel is invalid and not previously notified
-      if (!notifiedInvalidChannels.includes(channel)) {
-        sendSlackNotification(channel);
-        notifiedInvalidChannels.push(channel); // Add the channel to notified list
-        // Update the stored list of notifiedInvalidChannels in localStorage
-        localStorage.setItem('notifiedInvalidChannels', JSON.stringify(notifiedInvalidChannels));
-      }
-
-      return 'Invalid';
-    }
+    return 'Invalid';
   }
 }
 
+
+}
 
 // Update channel status based on the collective validation result
 function updateChannelStatus(channelItem, status) {
