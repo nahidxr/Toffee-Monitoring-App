@@ -230,7 +230,7 @@
         <div class="channel-name" style="text-align: center;">{{ $channel->cname->name }}</div>
         <div class="channel-status">
             <span class="channel-light light-green"></span> <!-- Remove unnecessary </i> tag -->
-            <span class="status">Channel: Playing</span>
+            <span class="status">Status: Active</span>
         </div>
         <!-- Additional small buttons -->
         <div style="display: flex; justify-content: space-around; margin-top: 10px;">
@@ -528,16 +528,16 @@ function updateChannelStatus(channelItem, status) {
   const statusText = channelItem.querySelector('.status');
   const channelDiv = channelItem;
 
-  if (status === 'Playing') {
+  if (status === 'Active') {
     light.classList.remove('light-red');
     light.classList.add('light-green');
-    statusText.textContent = 'Status: Playing';
+    statusText.textContent = 'Status: Active';
     channelDiv.style.backgroundColor = 'lightgreen';
   } else {
     light.classList.remove('light-green');
     // light.innerHTML = '<i class="fa fa-circle text-danger-glow blink"></i>';
     light.classList.add('light-red');
-    statusText.textContent = 'Status: Stop';
+    statusText.textContent = 'Status: Inactive';
     channelDiv.style.backgroundColor = 'lightcoral';
   }
 }
