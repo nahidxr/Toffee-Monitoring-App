@@ -45,7 +45,7 @@ class ChannelCheckController extends Controller
         $message = "Channel Profile Successful for: $channelData";
 
         // Send the notification to Slack using the webhook URL
-        $webhookUrl = 'https://hooks.slack.com/services/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';
+        $webhookUrl = 'https://hooks.slack.com/services/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';
 
         $response = Http::post($webhookUrl, [
             'text' => $message,

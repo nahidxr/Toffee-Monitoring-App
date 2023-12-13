@@ -490,7 +490,7 @@ function getCSRFToken() {
 
 
 // Retrieve the list of previously notified invalid channels from localStorage
-let notifiedInvalidChannels = JSON.parse(localStorage.getItem('notifiedInvalidChannels')) || [];
+// let notifiedInvalidChannels = JSON.parse(localStorage.getItem('notifiedInvalidChannels')) || [];
 
 function validateResponse(data, channel, channelItem) {
   const channelParts = channel.split('_');
@@ -512,23 +512,23 @@ function validateResponse(data, channel, channelItem) {
       myDiv.removeChild(existingButtonWithSameDigits);
     }
 
-        // Check if the current channel is in the notifiedInvalidChannels array
-      const channelCleared = notifiedInvalidChannels.includes(channel);
+    //     // Check if the current channel is in the notifiedInvalidChannels array
+    //   const channelCleared = notifiedInvalidChannels.includes(channel);
 
-    // Channel is valid, so clear it from the notifiedInvalidChannels array
-    notifiedInvalidChannels = notifiedInvalidChannels.filter(
-      (invalidChannel) => invalidChannel !== channel
-    );
-    // Store updated list of notifiedInvalidChannels in localStorage
-    localStorage.setItem(
-      'notifiedInvalidChannels',
-      JSON.stringify(notifiedInvalidChannels)
-    );
+    // // Channel is valid, so clear it from the notifiedInvalidChannels array
+    // notifiedInvalidChannels = notifiedInvalidChannels.filter(
+    //   (invalidChannel) => invalidChannel !== channel
+    // );
+    // // Store updated list of notifiedInvalidChannels in localStorage
+    // localStorage.setItem(
+    //   'notifiedInvalidChannels',
+    //   JSON.stringify(notifiedInvalidChannels)
+    // );
 
-    // If the current channel was cleared, send Slack notification
-    if (channelCleared) {
-      sendValidSlackNotification(channel);
-    }
+    // // If the current channel was cleared, send Slack notification
+    // if (channelCleared) {
+    //   sendValidSlackNotification(channel);
+    // }
 
     return 'Valid';
   } else {
@@ -548,13 +548,13 @@ function validateResponse(data, channel, channelItem) {
       myButton.style.borderRadius = "50%";
       myDiv.appendChild(myButton);
 
-      // Only send Slack notification if the channel is invalid and not previously notified
-      if (!notifiedInvalidChannels.includes(channel)) {
-        sendSlackNotification(channel);
-        notifiedInvalidChannels.push(channel); // Add the channel to notified list
-        // Update the stored list of notifiedInvalidChannels in localStorage
-        localStorage.setItem('notifiedInvalidChannels', JSON.stringify(notifiedInvalidChannels));
-      }
+      // // Only send Slack notification if the channel is invalid and not previously notified
+      // if (!notifiedInvalidChannels.includes(channel)) {
+      //   sendSlackNotification(channel);
+      //   notifiedInvalidChannels.push(channel); // Add the channel to notified list
+      //   // Update the stored list of notifiedInvalidChannels in localStorage
+      //   localStorage.setItem('notifiedInvalidChannels', JSON.stringify(notifiedInvalidChannels));
+      // }
 
       return 'Invalid';
     }
@@ -639,7 +639,7 @@ function fetchAndLogAllResponses(urls, channelItem) {
  // Trigger video playback initialization when the page loads
  window.addEventListener('load', function() {
     initializeVideoPlayback();
-    checkChannelsSequentially();
+    // checkChannelsSequentially();
   });
 </script>
 
