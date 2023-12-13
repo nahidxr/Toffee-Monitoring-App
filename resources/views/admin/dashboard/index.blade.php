@@ -20,7 +20,7 @@
       <thead>
         <tr>
           <th>#</th>
-          <th>Channel Logo</th>
+          <th>Logo</th>
           <th>Channel Name</th>
           <th>Service Name</th>
           <th>Channel status</th>

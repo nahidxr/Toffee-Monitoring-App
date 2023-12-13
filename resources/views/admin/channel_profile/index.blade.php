@@ -77,10 +77,10 @@
                 <td>{{ \App\Enums\Service::getDescription($item->service_name) }}</td>
                 {{-- <td>{{ $item->transcoder_info }}</td>--}}
                 <td>
-                  <a href="{{ $item->transcoder_info }}">
-                      Transcoder Link <i class="fas fa-external-link-alt"></i>
-                  </a>
-              </td>
+    <a href="{{ $item->transcoder_info }}" target="_blank">
+        Transcoder Link <i class="fas fa-external-link-alt"></i>
+    </a>
+</td>
                 @if($item->status === \App\Enums\ChannelStatus::Active)
                 <td>
                   <span style="color: green;"><i class="fas fa-check-circle"></i> {{ \App\Enums\ChannelStatus::getDescription($item->status) }}</span>

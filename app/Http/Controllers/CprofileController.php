@@ -10,6 +10,8 @@ use Illuminate\Broadcasting\Channel;
 use Illuminate\Support\Facades\File;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Validator;
+
 
 
 class CprofileController extends Controller
@@ -33,6 +35,22 @@ class CprofileController extends Controller
 
     public function store(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'pname' => 'required',
+            'channel_name_id' => 'required',
+            'plink' => 'required',
+            'status' => 'required',
+            'service_name' => 'required',
+            'transcoder_info' => 'required',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Validate image type and size
+        ]);
+    
+        if ($validator->fails()) {
+            return redirect('/channel_profile/create')
+                        ->withErrors($validator)
+                        ->withInput();
+        }
+    
         $data = new Cprofile();
         $data->Profile_name = $request->pname;
         $data->channel_name_id = $request->channel_name_id;
@@ -48,14 +66,14 @@ class CprofileController extends Controller
             $file->move('upload/images', $filename);
             $data->image = $filename;
         }
+    
         $data->save();
-        $notification = array(
+        $notification = [
             'message' => 'Image Inserted Successfully',
             'alert-type' => 'success'
-
-        );
-
-        return redirect('/channel_profile')->with($notification);
+        ];
+    
+        return redirect('/channel_profile/create')->with($notification);
     }
 
   
@@ -83,20 +101,37 @@ class CprofileController extends Controller
     {
         $data = Cprofile::find($id);
         if (!$data) {
-
             return redirect('/channel_profile');
         }
+    
+        $validator = Validator::make($request->all(), [
+            'pname' => 'required',
+            'channel_name_id' => 'required',
+            'plink' => 'required',
+            'status' => 'required',
+            'service_name' => 'required',
+            'transcoder_info' => 'required',
+            'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Validate image type and size
+        ]);
+    
+        if ($validator->fails()) {
+            return redirect()->back()
+                        ->withErrors($validator)
+                        ->withInput();
+        }
+    
+        // Update data fields
         $data->Profile_name = $request->pname;
         $data->channel_name_id = $request->channel_name_id;
         $data->Profile_link = $request->plink;
         $data->status = $request->status;
         $data->service_name = $request->service_name;
         $data->transcoder_info = $request->transcoder_info;
-
+    
+        // Handle image update
         if ($request->hasFile('image')) {
             $destination = 'upload/images/' . $data->image;
             if (File::exists($destination)) {
-
                 File::delete($destination);
             }
             $file = $request->file('image');
@@ -105,15 +140,15 @@ class CprofileController extends Controller
             $file->move('upload/images', $filename);
             $data->image = $filename;
         }
-
+    
         $data->save();
-
-        $notification = array(
+    
+        $notification = [
             'message' => 'Image Updated Successfully',
             'alert-type' => 'success'
-        );
-
-        return redirect('/channel_profile')->with($notification);
+        ];
+    
+        return redirect('/channel_profile/create')->with($notification);
     }
 
     public function destroy($id)

@@ -225,7 +225,7 @@
    @foreach($cprofile_list as $channel)
     <div class="channel-item" id="channel{{ $channel->id }}">
         <a href="#" class="playButton" data-channel-link="{{ $channel->Profile_link }}">
-            <img src="{{ url('upload/images/'.$channel->image) }}" class="brand-image elevation-3" style="opacity: .8; border-left-style: solid; margin-left: 0px; border-left-width: 0px; height: 100x; width:100px; margin-top: 10px;">
+            <img src="{{ url('upload/images/'.$channel->image) }}" class="brand-image elevation-3" style="opacity: .8; border-left-style: solid; margin-left: 25px; border-left-width: 0px; height: 40x; width:60px; margin-top: 10px;">
           </a>      
         <div class="channel-name" style="text-align: center;">{{ $channel->cname->name }}</div>
         <div class="channel-status">
@@ -461,33 +461,6 @@ function getCSRFToken() {
   return null;
 }
 
-// send notification for valid channel
-
-function sendValidSlackNotification(channelData) {
-  fetch('/send-valid-slack-notification', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-CSRF-TOKEN': getCSRFToken(), // Function to retrieve the CSRF token
-    },
-    body: JSON.stringify({ channelData }),
-  })
-  .then(response => {
-    console.log('Slack notification sent:', response);
-  })
-  .catch(error => {
-    console.error('Error sending Slack notification:', error);
-  });
-}
-
-function getCSRFToken() {
-  const metaTag = document.querySelector('meta[name="csrf-token"]');
-  if (metaTag) {
-    return metaTag.content;
-  }
-  return null;
-}
-
 
 // Retrieve the list of previously notified invalid channels from localStorage
 let notifiedInvalidChannels = JSON.parse(localStorage.getItem('notifiedInvalidChannels')) || [];
@@ -512,23 +485,10 @@ function validateResponse(data, channel, channelItem) {
       myDiv.removeChild(existingButtonWithSameDigits);
     }
 
-        // Check if the current channel is in the notifiedInvalidChannels array
-      const channelCleared = notifiedInvalidChannels.includes(channel);
-
     // Channel is valid, so clear it from the notifiedInvalidChannels array
-    notifiedInvalidChannels = notifiedInvalidChannels.filter(
-      (invalidChannel) => invalidChannel !== channel
-    );
+    notifiedInvalidChannels = notifiedInvalidChannels.filter(invalidChannel => invalidChannel !== channel);    
     // Store updated list of notifiedInvalidChannels in localStorage
-    localStorage.setItem(
-      'notifiedInvalidChannels',
-      JSON.stringify(notifiedInvalidChannels)
-    );
-
-    // If the current channel was cleared, send Slack notification
-    if (channelCleared) {
-      sendValidSlackNotification(channel);
-    }
+    localStorage.setItem('notifiedInvalidChannels', JSON.stringify(notifiedInvalidChannels));
 
     return 'Valid';
   } else {
@@ -639,7 +599,7 @@ function fetchAndLogAllResponses(urls, channelItem) {
  // Trigger video playback initialization when the page loads
  window.addEventListener('load', function() {
     initializeVideoPlayback();
-    checkChannelsSequentially();
+    // checkChannelsSequentially();
   });
 </script>
 

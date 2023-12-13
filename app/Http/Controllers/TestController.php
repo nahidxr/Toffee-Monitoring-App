@@ -58,10 +58,6 @@ class TestController extends Controller
         // $streamUrl = 'https://mcdn-test.toffeelive.com/cdn/live/nick/playlist.m3u8';
 
 
-        
-
-
-
         $streamUrl = 'https://mcdn-test.toffeelive.com/cdn/live/nick/playlist.m3u8';
         $response = Http::get($streamUrl);
 
