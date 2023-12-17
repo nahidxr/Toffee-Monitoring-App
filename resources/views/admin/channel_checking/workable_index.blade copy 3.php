@@ -224,8 +224,8 @@
   <div class="mosaic-container">
    @foreach($cprofile_list as $channel)
     <div class="channel-item" id="channel{{ $channel->id }}">
-        <a href="#" class="playButton" data-channel-link="{{ $channel->Profile_link }}" data-service-name="{{ \App\Enums\Service::getDescription($channel->service_name) }}">
-            <img src="{{ url('upload/images/'.$channel->image) }}" class="brand-image elevation-3" style="opacity: .8; border-left-style: solid; margin-left: 0px; border-left-width: 0px; height: 100x; width:100px; margin-top: 10px;">
+        <a href="#" class="playButton" data-channel-link="{{ $channel->Profile_link }}">
+            <img src="{{ url('upload/images/'.$channel->image) }}" class="brand-image elevation-3" style="opacity: .8; border-left-style: solid; margin-left: 25px; border-left-width: 0px; height: 40x; width:60px; margin-top: 10px;">
           </a>      
         <div class="channel-name" style="text-align: center;">{{ $channel->cname->name }}</div>
         <div class="channel-status">
@@ -319,7 +319,7 @@ function checkChannelsSequentially() {
         startChecking();
       }
     
-    }, 4000); // Check every 5 seconds
+    }, 3000); // Check every 5 seconds
   }
 
   // Start checking channels
@@ -353,13 +353,11 @@ function checkChannelsSequentially() {
     channelItems.forEach(function(channelItem) {
       var playButton = channelItem.querySelector('.playButton');
       var channelLink = playButton.dataset.channelLink;
-      var serviceName = playButton.dataset.serviceName; // Get the service name
-      // console.log(serviceName);
-      fetchChannelLink(channelLink,channelItem,serviceName);
+      fetchChannelLink(channelLink,channelItem);
     });
   }
 // Fetch and log the response from the channel link
-function fetchChannelLink(channelLink,channelItem,serviceName) {
+function fetchChannelLink(channelLink,channelItem) {
   fetch(channelLink)
     .then(response => {
       if (!response.ok) {
@@ -376,7 +374,8 @@ function fetchChannelLink(channelLink,channelItem,serviceName) {
       // console.log(generatedURLs);
 
          // Fetch responses from generated URLs and log them
-         fetchAndLogAllResponses(generatedURLs,channelItem,serviceName);      
+         fetchAndLogAllResponses(generatedURLs,channelItem);
+      
       // You can process or handle the stream information further here as needed
     })
     .catch(error => {
@@ -413,7 +412,7 @@ function generateFullURLs(responseText, baseURL) {
 
 
 // Function to fetch responses from all URLs and log them
-function fetchAndValidateAllUrls(urls, channelItem,serviceName) {
+function fetchAndValidateAllUrls(urls, channelItem) {
   const promises = urls.map(urlData =>
     fetch(urlData.fullURL)
       .then(response => {
@@ -422,7 +421,7 @@ function fetchAndValidateAllUrls(urls, channelItem,serviceName) {
         }
         return response.text();
       })
-      .then(data => validateResponse(data, urlData.channel,channelItem,serviceName)) // Pass channel data to validateResponse
+      .then(data => validateResponse(data, urlData.channel,channelItem)) // Pass channel data to validateResponse
       .catch(error => {
         console.error(`There was a problem with the fetch operation for ${urlData.fullURL}:`, error);
         return 'Invalid'; // Return 'Invalid' status if there's an error
@@ -436,20 +435,15 @@ function fetchAndValidateAllUrls(urls, channelItem,serviceName) {
     });
 }
 
-// Send notification for Invalid channel
-function sendSlackNotification(channelData, serviceName) {
-  const data = {
-    channelData: channelData,
-    serviceName: serviceName
-  };
 
+function sendSlackNotification(channelData) {
   fetch('/send-slack-notification', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'X-CSRF-TOKEN': getCSRFToken(),
+      'X-CSRF-TOKEN': getCSRFToken(), // Function to retrieve the CSRF token
     },
-    body: JSON.stringify(data),
+    body: JSON.stringify({ channelData }),
   })
   .then(response => {
     console.log('Slack notification sent:', response);
@@ -466,45 +460,12 @@ function getCSRFToken() {
   }
   return null;
 }
-
-
-// Send notification for valid channel
-function sendValidSlackNotification(channelData, serviceName) {
-  const data = {
-    channelData: channelData,
-    serviceName: serviceName
-  };
-
-  fetch('/send-valid-slack-notification', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-CSRF-TOKEN': getCSRFToken(),
-    },
-    body: JSON.stringify(data),
-  })
-  .then(response => {
-    console.log('Slack notification sent:', response);
-  })
-  .catch(error => {
-    console.error('Error sending Slack notification:', error);
-  });
-}
-
-function getCSRFToken() {
-  const metaTag = document.querySelector('meta[name="csrf-token"]');
-  if (metaTag) {
-    return metaTag.content;
-  }
-  return null;
-}
-
 
 
 // Retrieve the list of previously notified invalid channels from localStorage
- let notifiedInvalidChannels = JSON.parse(localStorage.getItem('notifiedInvalidChannels')) || [];
+let notifiedInvalidChannels = JSON.parse(localStorage.getItem('notifiedInvalidChannels')) || [];
 
-function validateResponse(data, channel, channelItem,serviceName) {
+function validateResponse(data, channel, channelItem) {
   const channelParts = channel.split('_');
   const lastPart = channelParts[channelParts.length - 1];
   const lastThreeDigits = lastPart.slice(-3);
@@ -524,23 +485,10 @@ function validateResponse(data, channel, channelItem,serviceName) {
       myDiv.removeChild(existingButtonWithSameDigits);
     }
 
-        // Check if the current channel is in the notifiedInvalidChannels array
-      const channelCleared = notifiedInvalidChannels.includes(channel);
-
     // Channel is valid, so clear it from the notifiedInvalidChannels array
-    notifiedInvalidChannels = notifiedInvalidChannels.filter(
-      (invalidChannel) => invalidChannel !== channel
-    );
+    notifiedInvalidChannels = notifiedInvalidChannels.filter(invalidChannel => invalidChannel !== channel);    
     // Store updated list of notifiedInvalidChannels in localStorage
-    localStorage.setItem(
-      'notifiedInvalidChannels',
-      JSON.stringify(notifiedInvalidChannels)
-    );
-
-    // If the current channel was cleared, send Slack notification
-    if (channelCleared) {
-      sendValidSlackNotification(channel,serviceName);
-    }
+    localStorage.setItem('notifiedInvalidChannels', JSON.stringify(notifiedInvalidChannels));
 
     return 'Valid';
   } else {
@@ -562,7 +510,7 @@ function validateResponse(data, channel, channelItem,serviceName) {
 
       // Only send Slack notification if the channel is invalid and not previously notified
       if (!notifiedInvalidChannels.includes(channel)) {
-        sendSlackNotification(channel,serviceName);
+        sendSlackNotification(channel);
         notifiedInvalidChannels.push(channel); // Add the channel to notified list
         // Update the stored list of notifiedInvalidChannels in localStorage
         localStorage.setItem('notifiedInvalidChannels', JSON.stringify(notifiedInvalidChannels));
@@ -595,8 +543,8 @@ function updateChannelStatus(channelItem, status) {
 }
 
 // Modify the existing function where all responses are fetched and validated
-function fetchAndLogAllResponses(urls, channelItem,serviceName) {
-  fetchAndValidateAllUrls(urls, channelItem,serviceName);
+function fetchAndLogAllResponses(urls, channelItem) {
+  fetchAndValidateAllUrls(urls, channelItem);
 }
 // Open modal and play video when play button is clicked
   var playButtons = document.querySelectorAll('.playButton');
@@ -651,17 +599,7 @@ function fetchAndLogAllResponses(urls, channelItem,serviceName) {
  // Trigger video playback initialization when the page loads
  window.addEventListener('load', function() {
     initializeVideoPlayback();
-    
-    // sequentially channel checking function
-   // checkChannelsSequentially();
-
-
-    // Call initializeVideoPlayback() every 10 minutes (600,000 milliseconds = 10 minutes)
-  // setInterval(() => {
-  //   location.reload(); // Reload the page after all channels have been checked
-  // },600000); // 10 minutes in milliseconds
-
-
+    // checkChannelsSequentially();
   });
 </script>
 
