@@ -657,9 +657,9 @@ function fetchAndLogAllResponses(urls, channelItem,serviceName) {
 
 
     // Call initializeVideoPlayback() every 10 minutes (600,000 milliseconds = 10 minutes)
-  // setInterval(() => {
-  //   location.reload(); // Reload the page after all channels have been checked
-  // },600000); // 10 minutes in milliseconds
+   setInterval(() => {
+     location.reload(); // Reload the page after all channels have been checked
+   },600000); // 10 minutes in milliseconds
 
 
   });
