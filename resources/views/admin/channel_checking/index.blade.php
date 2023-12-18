@@ -501,6 +501,57 @@ function getCSRFToken() {
 
 
 
+// Function to count and send channel counts to the server
+function countAndSendChannelCounts() {
+  const channelItems = document.querySelectorAll('.mosaic-container .channel-item');
+
+  let validChannels = 0;
+  let invalidChannels = 0;
+
+  channelItems.forEach(channelItem => {
+    const channelLight = channelItem.querySelector('.channel-light');
+
+    // Check if the channel-light span has the class light-green or light-red
+    if (channelLight.classList.contains('light-green')) {
+      validChannels++;
+    } else if (channelLight.classList.contains('light-red')) {
+      invalidChannels++;
+    }
+  });
+
+  const totalChannels = validChannels + invalidChannels;
+
+  const countsData = {
+    totalChannels: totalChannels,
+    validChannels: validChannels,
+    invalidChannels: invalidChannels
+  };
+
+  const csrfToken = getCSRFToken();
+  if (!csrfToken) {
+    console.error('CSRF token is missing or invalid.');
+    return;
+  }
+
+  fetch('/send-channel-counts', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRF-TOKEN': csrfToken,
+    },
+    body: JSON.stringify(countsData),
+  })
+  .then(response => {
+    console.log('Channel counts sent to server:', response);
+  })
+  .catch(error => {
+    console.error('Error sending channel counts:', error);
+  });
+}
+
+
+
+
 // Retrieve the list of previously notified invalid channels from localStorage
  let notifiedInvalidChannels = JSON.parse(localStorage.getItem('notifiedInvalidChannels')) || [];
 
@@ -659,6 +710,11 @@ function fetchAndLogAllResponses(urls, channelItem,serviceName) {
     // Call initializeVideoPlayback() every 10 minutes (600,000 milliseconds = 10 minutes)
    setInterval(() => {
      location.reload(); // Reload the page after all channels have been checked
+   },180000); // 10 minutes in milliseconds
+
+   setInterval(() => {
+    countAndSendChannelCounts();
+     
    },600000); // 10 minutes in milliseconds
 
 

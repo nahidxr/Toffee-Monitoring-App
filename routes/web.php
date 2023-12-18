@@ -46,6 +46,7 @@ Route::delete('/channel_profile/{id}', [CprofileController::class, 'destroy']);
 Route::get('/channel_checking', [ChannelCheckController::class, 'index']);
 Route::post('/send-slack-notification', [ChannelCheckController::class, 'sendSlackNotification']);
 Route::post('/send-valid-slack-notification', [ChannelCheckController::class, 'sendValidSlackNotification']);
+Route::post('/send-channel-counts', [ChannelCheckController::class, 'sendChannelCounts']);
 
 
 //TestController

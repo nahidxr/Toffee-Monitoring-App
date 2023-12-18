@@ -25,7 +25,7 @@ class ChannelCheckController extends Controller
         $message = "Channel Profile failed for: $channelData on Service: $serviceName";
 
         // Send the notification to Slack using the webhook URL
-        $webhookUrl = 'https://hooks.slack.com/services/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';
+        $webhookUrl = 'https://hooks.slack.com/services/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';
 
         $response = Http::post($webhookUrl, [
             'text' => $message,
@@ -48,7 +48,7 @@ class ChannelCheckController extends Controller
         $message = "Channel Profile Successful for: $channelData on Service: $serviceName";
     
         // Send the notification to Slack using the webhook URL
-        $webhookUrl = 'https://hooks.slack.com/services/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';
+        $webhookUrl = 'https://hooks.slack.com/services/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';
     
         $response = Http::post($webhookUrl, [
             'text' => $message,
@@ -59,6 +59,29 @@ class ChannelCheckController extends Controller
             return response()->json(['message' => 'Slack notification sent']);
         } else {
             return response()->json(['error' => 'Failed to send Slack notification'], 500);
+        }
+    }
+    public function sendChannelCounts(Request $request)
+    {
+        $totalChannels = $request->input('totalChannels');
+        $validChannels = $request->input('validChannels');
+        $invalidChannels = $request->input('invalidChannels');
+
+        // Construct the message to be sent to Slack
+        $message = "Total Channels: $totalChannels\nValid Channels: $validChannels\nInvalid Channels: $invalidChannels";
+
+        // Send the counts notification to Slack using the webhook URL
+        $webhookUrl = 'https://hooks.slack.com/services/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'; // Replace with your actual Slack webhook URL
+
+        $response = Http::post($webhookUrl, [
+            'text' => $message,
+        ]);
+
+        // Check if the notification was sent successfully
+        if ($response->successful()) {
+            return response()->json(['message' => 'Channel counts sent to Slack']);
+        } else {
+            return response()->json(['error' => 'Failed to send channel counts to Slack'], 500);
         }
     }
     
