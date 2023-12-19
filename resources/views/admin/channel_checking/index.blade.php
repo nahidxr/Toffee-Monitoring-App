@@ -702,23 +702,29 @@ function fetchAndLogAllResponses(urls, channelItem,serviceName) {
  // Trigger video playback initialization when the page loads
  window.addEventListener('load', function() {
     initializeVideoPlayback();
+    setInterval(() => {
+    location.reload(); // Reload the page
+  }, 180000); // 3 minutes in milliseconds
+
+
+    // countAndSendChannelCounts();
+
     
     // sequentially channel checking function
    // checkChannelsSequentially();
 
 
-    // Call initializeVideoPlayback() every 10 minutes (600,000 milliseconds = 10 minutes)
-   setInterval(() => {
-     location.reload(); // Reload the page after all channels have been checked
-   },180000); // 10 minutes in milliseconds
+  //   // Send Slack notification using countAndSendChannelCounts() every 3 minutes
+  // setInterval(() => {
+  //   countAndSendChannelCounts();
+  // }, 120000); // 3 minutes in milliseconds
 
-   setInterval(() => {
-    countAndSendChannelCounts();
-     
-   },600000); // 10 minutes in milliseconds
-
-
+  // Reload the page every 2 minutes
+ 
   });
+
+
+
 </script>
 
 </body>
