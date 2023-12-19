@@ -25,7 +25,7 @@ class ChannelCheckController extends Controller
         $message = "Channel Profile failed for: $channelData on Service: $serviceName";
 
         // Send the notification to Slack using the webhook URL
-        $webhookUrl = 'https://hooks.slack.com/services/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';
+        $webhookUrl = 'https://hooks.slack.com/services/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';
 
         $response = Http::post($webhookUrl, [
             'text' => $message,
@@ -48,7 +48,7 @@ class ChannelCheckController extends Controller
         $message = "Channel Profile Successful for: $channelData on Service: $serviceName";
     
         // Send the notification to Slack using the webhook URL
-        $webhookUrl = 'https://hooks.slack.com/services/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';
+        $webhookUrl = 'https://hooks.slack.com/services/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';
     
         $response = Http::post($webhookUrl, [
             'text' => $message,
@@ -71,7 +71,7 @@ class ChannelCheckController extends Controller
         $message = "Total Channels: $totalChannels\nValid Channels: $validChannels\nInvalid Channels: $invalidChannels";
 
         // Send the counts notification to Slack using the webhook URL
-        $webhookUrl = 'https://hooks.slack.com/services/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'; // Replace with your actual Slack webhook URL
+        $webhookUrl = 'https://hooks.slack.com/services/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'; // Replace with your actual Slack webhook URL
 
         $response = Http::post($webhookUrl, [
             'text' => $message,

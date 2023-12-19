@@ -714,12 +714,14 @@ function fetchAndLogAllResponses(urls, channelItem,serviceName) {
    // checkChannelsSequentially();
 
 
-  //   // Send Slack notification using countAndSendChannelCounts() every 3 minutes
+
+
+  //   // Send Slack notification using countAndSendChannelCounts() every 2 minutes
   // setInterval(() => {
   //   countAndSendChannelCounts();
-  // }, 120000); // 3 minutes in milliseconds
+  // }, 120000); // 2 minutes in milliseconds
 
-  // Reload the page every 2 minutes
+  
  
   });
 
