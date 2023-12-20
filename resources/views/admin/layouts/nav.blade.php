@@ -44,7 +44,7 @@
     <li class="nav-item">
         <a href="{{ url('/dashboard') }}" class="nav-link">
             <i class="fas fa-folder"></i>
-            <p>Channel Playing</p>
+            <p>Dashboard</p>
         </a>
     </li>
     

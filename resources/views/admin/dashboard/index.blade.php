@@ -2,19 +2,24 @@
 @section('page_title')
 
 <div class="row" style=" margin-top: 9px">
-  <div class="col-lg-3 col-6">
+<div class="col-lg-3 col-6">
     <!-- small box -->
     <div class="small-box bg-info">
-      <div class="inner">
-        <h3>150</h3>
-
-        <p>Demo Totall Channel</p>
-      </div>
-      <div class="icon">
-        <i class="ion ion-bag"></i>
-      </div>
+        <div class="inner">
+        <h4 style="color: #fff; font-weight: bold;">Channel Status</h4>
+            <p>
+                Total : 150 <br>
+                Inactive : 50 <br>
+                Not Functional : 50 <br>
+                
+            </p>
+        </div>
+        <div class="icon">
+            <i class="ion ion-bag"></i>
+        </div>
     </div>
-  </div>
+</div>
+
   <!-- ./col -->
   <div class="col-lg-3 col-6">
     <!-- small box -->

@@ -25,7 +25,7 @@ class SlackNotificationController extends Controller
                 $existingChannel->update(['channel_status' => 'Invalid']);
 
                 // Send the notification to Slack using the webhook URL
-                $webhookUrl = 'https://hooks.slack.com/services/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';
+                $webhookUrl = 'https://hooks.slack.com/services/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';
 
                 $response = Http::post($webhookUrl, [
                     // 'text' => ">Channel Profile failed for: $channelData on Service: $serviceName",
@@ -57,6 +57,7 @@ class SlackNotificationController extends Controller
             ]);
 
             // Send the notification to Slack using the webhook URl
+            $webhookUrl = 'https://hooks.slack.com/services/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';
 
             $response = Http::post($webhookUrl, [
                 // 'text' => ">Channel Profile failed for: $channelData on Service: $serviceName",
@@ -77,7 +78,7 @@ class SlackNotificationController extends Controller
     }
 
    public function sendValidSlackNotification(Request $request)
-{
+    {
     $channelData = $request->input('channelData');
     $serviceName = $request->input('serviceName');
     $status = $request->input('status');
@@ -91,7 +92,7 @@ class SlackNotificationController extends Controller
             $existingChannel->update(['channel_status' => 'Valid']);
 
             // Send the notification to Slack using the webhook URL
-            $webhookUrl = 'https://hooks.slack.com/services/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';
+            $webhookUrl = 'https://hooks.slack.com/services/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';
 
             $response = Http::post($webhookUrl, [
                 // 'text' => ">Channel Profile Successful for: $channelData on Service: $serviceName :green_circle:",

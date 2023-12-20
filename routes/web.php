@@ -33,10 +33,10 @@ use App\Models\Cprofile;
 
 // Route::get('/dashboard', [DashboardController::class, 'index']);
 
-Route::get('/channel_checking', function () {
-    $data['cprofile_list'] = Cprofile::get();
-    return view('admin.channel_checking.index',$data);
-})->middleware(['auth', 'verified'])->name('channel_checking');
+Route::get('/dashboard', function () {
+    // $data['cprofile_list'] = Cprofile::get();
+    return view('admin.dashboard.index');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
 
 // // channel name
@@ -69,7 +69,11 @@ Route::get('/test',[TestController::class,'index']);
 Route::get('post',[TestController::class,'test']);
 
 
+
 Route::middleware('auth')->group(function () {
+
+//channel checking
+Route::get('/channel_checking', [ChannelCheckController::class, 'index']);
 // channel name
 Route::get('/channel_name', [CnameController::class, 'index']);
 Route::get('/channel_name/create', [CnameController::class, 'create']);
@@ -91,7 +95,9 @@ Route::post('/send-valid-slack-notification', [SlackNotificationController::clas
 Route::post('/send-channel-counts', [SlackNotificationController::class, 'sendChannelCounts']);
 
 //dashboard
-Route::get('/dashboard', [DashboardController::class, 'index']);
+// Route::get('/dashboard', [DashboardController::class, 'index']);
+
+//channe
 Route::get('/channel_playing', [ChannelPlayingController::class, 'index']);
   
 });

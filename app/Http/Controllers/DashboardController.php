@@ -16,8 +16,10 @@ class DashboardController extends Controller
     public function index()
     {
 
-        $data['cprofile_list'] = Cprofile::get();
-        return view('admin.dashboard.index', $data);
+        //  $data['cprofile_list'] = Cprofile::get();
+        // return view('admin.dashboard.index', $data);
+     
+        return view('admin.dashboard.index');
     }
 
     /**
