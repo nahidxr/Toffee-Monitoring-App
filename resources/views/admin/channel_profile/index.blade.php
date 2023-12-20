@@ -1,3 +1,7 @@
+
+@php
+    $userType = auth()->user()->user_type ?? null; // Get the user's type or default to null
+@endphp
 @extends('admin.layouts.app')
 @section('page_title')
 <div class="row mb-0">
@@ -6,7 +10,7 @@
   </div>
   <div class="col-sm-6">
     <ol class="breadcrumb float-sm-right">
-      <li class="breadcrumb-item"><a href="{{ url('/') }}">Dashboard</a></li>
+      <li class="breadcrumb-item"><a href="{{ url('/dashboard') }}">Dashboard</a></li>
       <li class="breadcrumb-item active">Channel Profile</li>
     </ol>
   </div>
@@ -23,12 +27,15 @@
 </div>
 </div>
 <div class="card">
+    @if($userType === 'admin')
     <div class="card-header">
       <h3 class="card-title"></h3>
       <div class="card-tools">
-        <a class="btn btn-success" href="{{ url('/channel_profile/create') }}">Add New Profile</a>
+        <a class="btn btn-success" href="{{ url('/channel_profile/create') }}">Add New Channel</a>
       </div>
     </div>
+    
+            @endif
         
 <!-- Place this code where you want to display flash messages -->
 @if(session('success'))
@@ -44,7 +51,7 @@
 @endif
 
     <div class="card-body">
-      <table class="table table-bordered">
+      <!-- <table class="table table-bordered">
         <thead>
           <tr>
             <th>#</th>
@@ -77,10 +84,10 @@
                 <td>{{ \App\Enums\Service::getDescription($item->service_name) }}</td>
                 {{-- <td>{{ $item->transcoder_info }}</td>--}}
                 <td>
-    <a href="{{ $item->transcoder_info }}" target="_blank">
-        Transcoder Link <i class="fas fa-external-link-alt"></i>
-    </a>
-</td>
+                 <a href="{{ $item->transcoder_info }}" target="_blank">
+                     Transcoder Link <i class="fas fa-external-link-alt"></i>
+                 </a>
+                </td>
                 @if($item->status === \App\Enums\ChannelStatus::Active)
                 <td>
                   <span style="color: green;"><i class="fas fa-check-circle"></i> {{ \App\Enums\ChannelStatus::getDescription($item->status) }}</span>
@@ -107,7 +114,67 @@
               </tr>
             @endforeach 
         </tbody>
-      </table>
+      </table> -->
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Logo</th>
+            <th>Channel Name</th>
+            <th>FLV Name</th>
+            <th>URL</th>
+            <th>Service Name</th>
+            <th>Transcode Info</th>
+            @if($userType === 'admin')
+                <th>Channel Status</th>
+                <th>Action</th>
+            @endif
+        </tr>
+    </thead>
+    <tbody>
+        @foreach ($cprofile_list as $item)
+            <tr class="channel-row">
+                <td>{{ $loop->iteration }}</td>
+                <td><img src="{{ url('upload/images/'.$item->image) }}" alt="Image" class="img-fluid" width="50" height="40"></td>
+                <td>{{ $item->cname->name }}</td>
+                <td>{{ $item->Profile_name }}</td>
+                <td>
+                    <a href="{{ $item->Profile_link }}">
+                        Channel Link <i class="fas fa-external-link-alt"></i>
+                    </a>
+                </td>
+                <td>{{ \App\Enums\Service::getDescription($item->service_name) }}</td>
+                <td>
+                   <a href="{{ $item->transcoder_info }}" target="_blank">
+                    Transcoder Link <i class="fas fa-external-link-alt"></i>
+                    </a>
+                </td>
+                @if($userType === 'admin')
+                    <td>
+                        @if($item->status === \App\Enums\ChannelStatus::Active)
+                            <span style="color: green;"><i class="fas fa-check-circle"></i> {{ \App\Enums\ChannelStatus::getDescription($item->status) }}</span>
+                        @elseif($item->status === \App\Enums\ChannelStatus::Inactive)
+                            <span style="color: red;"><i class="fas fa-times-circle"></i> {{ \App\Enums\ChannelStatus::getDescription($item->status) }}</span>
+                        @else
+                            {{ \App\Enums\ChannelStatus::getDescription($item->status) }}
+                        @endif
+                    </td>
+                    <td>
+                        <div class="btn-group" role="group">
+                            <a href="{{ url("/channel_profile/$item->id/edit") }}" class="btn btn-primary btn-sm">Update</a>
+                            <form action="{{ url("/channel_profile/$item->id") }}" method="POST" onsubmit="return confirm('Do you really want to delete this category?');">
+                                @csrf
+                                @method('delete')
+                                <input type="submit" value="Delete" class="btn btn-danger btn-sm ml-1">
+                            </form>
+                        </div>
+                    </td>
+                @endif
+            </tr>
+        @endforeach
+    </tbody>
+</table>
+
     </div>
   </div>
 </div>

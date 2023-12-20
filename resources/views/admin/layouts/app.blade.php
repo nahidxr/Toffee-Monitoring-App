@@ -27,6 +27,14 @@
       <li class="nav-item d-none d-sm-inline-block">
         <a href="{{ url('/') }}" class="nav-link">Home</a>
       </li>
+      <li class="nav-item ml-auto">
+        <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <button type="submit" class="nav-link" style="background: none; border: none; cursor: pointer;">
+                Logout
+            </button>
+        </form>
+    </li>
   
     </ul>
 

@@ -217,9 +217,27 @@
         </a>
         <h1 style="text-align: center; margin-left: 400px;">Toffee Channel Check</h1>
     </div>
-    <a href="{{ url('/') }}" class="nav-link" style="display: inline-block; padding: 8px 16px; background-color: #e6337a; color: white; text-decoration: none; border-radius: 4px;">
+    <!-- <a href="{{ url('/dashboard') }}" class="nav-link" style="display: inline-block; padding: 8px 16px; background-color: #e6337a; color: white; text-decoration: none; border-radius: 4px;">
         Dashboard
     </a>
+    <a href="{{ url('/dashboard') }}" class="nav-link" style="display: inline-block; padding: 8px 16px; background-color: #e6337a; color: white; text-decoration: none; border-radius: 4px;">
+        Logout
+    </a> -->
+
+    <div style="display: flex; gap: 10px;">
+    <a href="{{ url('/dashboard') }}" class="nav-link" style="flex: 1; padding: 8px 16px; background-color: #e6337a; color: white; text-decoration: none; border-radius: 4px; text-align: center;">
+        Dashboard
+    </a>
+
+    <form method="POST" action="{{ route('logout') }}" style="flex: 1; margin: 0; display: flex;">
+        @csrf
+        <button type="submit" class="nav-link" style="flex: 1; padding: 8px 16px; background-color: #e6337a; color: white; text-decoration: none; border-radius: 4px; border: none; cursor: pointer;">
+            Logout
+        </button>
+    </form>
+</div>
+
+
 </header>
   <div class="mosaic-container">
    @foreach($cprofile_list as $channel)
@@ -437,7 +455,7 @@ function fetchAndValidateAllUrls(urls, channelItem,serviceName) {
 }
 
 // Send notification for Invalid channel
-function sendSlackNotification(channelData, serviceName) {
+function sendInvalidSlackNotification(channelData, serviceName) {
   const data = {
     channelData: channelData,
     serviceName: serviceName
@@ -613,7 +631,7 @@ function validateResponse(data, channel, channelItem,serviceName) {
 
       // Only send Slack notification if the channel is invalid and not previously notified
       if (!notifiedInvalidChannels.includes(channel)) {
-        sendSlackNotification(channel,serviceName);
+        sendInvalidSlackNotification(channel,serviceName);
         notifiedInvalidChannels.push(channel); // Add the channel to notified list
         // Update the stored list of notifiedInvalidChannels in localStorage
         localStorage.setItem('notifiedInvalidChannels', JSON.stringify(notifiedInvalidChannels));
