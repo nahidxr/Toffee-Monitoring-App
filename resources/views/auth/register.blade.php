@@ -153,7 +153,7 @@
             <div class="field">
                <input type="password" id="password_confirmation"name="password_confirmation" required autocomplete="new-password">
                <span class="fas fa-lock"></span>
-               <label>Password</label>
+               <label>Confirm Password</label>
             </div>
             <button>REGISTER</button>
             <div class="sign-up">

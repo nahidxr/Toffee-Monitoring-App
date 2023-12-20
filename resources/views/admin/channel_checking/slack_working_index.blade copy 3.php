@@ -595,7 +595,24 @@ function validateResponse(data, channel, channelItem,serviceName) {
       myDiv.removeChild(existingButtonWithSameDigits);
     }
 
+        // Check if the current channel is in the notifiedInvalidChannels array
+      const channelCleared = notifiedInvalidChannels.includes(channel);
+
+    // Channel is valid, so clear it from the notifiedInvalidChannels array
+    notifiedInvalidChannels = notifiedInvalidChannels.filter(
+      (invalidChannel) => invalidChannel !== channel
+    );
+    // Store updated list of notifiedInvalidChannels in localStorage
+    localStorage.setItem(
+      'notifiedInvalidChannels',
+      JSON.stringify(notifiedInvalidChannels)
+    );
+
+    // If the current channel was cleared, send Slack notification
+    if (channelCleared) {
       sendValidSlackNotification(channel,serviceName);
+    }
+
     return 'Valid';
   } else {
     const myDiv = channelItem.querySelector('.mybutton');
@@ -615,8 +632,12 @@ function validateResponse(data, channel, channelItem,serviceName) {
       myDiv.appendChild(myButton);
 
       // Only send Slack notification if the channel is invalid and not previously notified
+      if (!notifiedInvalidChannels.includes(channel)) {
         sendInvalidSlackNotification(channel,serviceName);
-        
+        notifiedInvalidChannels.push(channel); // Add the channel to notified list
+        // Update the stored list of notifiedInvalidChannels in localStorage
+        localStorage.setItem('notifiedInvalidChannels', JSON.stringify(notifiedInvalidChannels));
+      }
 
       return 'Invalid';
     }
@@ -701,8 +722,6 @@ function fetchAndLogAllResponses(urls, channelItem,serviceName) {
  // Trigger video playback initialization when the page loads
  window.addEventListener('load', function() {
     initializeVideoPlayback();
-
-
     setInterval(() => {
     location.reload(); // Reload the page
   }, 180000); // 3 minutes in milliseconds
