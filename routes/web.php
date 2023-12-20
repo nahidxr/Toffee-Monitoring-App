@@ -8,6 +8,7 @@ use App\Http\Controllers\CprofileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ChannelCheckController;
 use App\Http\Controllers\SlackNotificationController;
+use App\Http\Controllers\ChannelPlayingController;
 use App\Http\Controllers\TestController;
 use App\Models\Cprofile;
 
@@ -91,6 +92,7 @@ Route::post('/send-channel-counts', [SlackNotificationController::class, 'sendCh
 
 //dashboard
 Route::get('/dashboard', [DashboardController::class, 'index']);
+Route::get('/channel_playing', [ChannelPlayingController::class, 'index']);
   
 });
 
