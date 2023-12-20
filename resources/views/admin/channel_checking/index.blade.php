@@ -461,7 +461,7 @@ function sendInvalidSlackNotification(channelData, serviceName) {
     serviceName: serviceName
   };
 
-  fetch('/send-slack-notification', {
+  fetch('/send-invalid-slack-notification', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

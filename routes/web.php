@@ -85,7 +85,7 @@ Route::put('/channel_profile/{id}', [CprofileController::class, 'update']);
 Route::delete('/channel_profile/{id}', [CprofileController::class, 'destroy']);
 
  //slacknotifiaction 
-Route::post('/send-slack-notification', [SlackNotificationController::class, 'sendInvalidSlackNotification']);
+Route::post('/send-invalid-slack-notification', [SlackNotificationController::class, 'sendInvalidSlackNotification']);
 Route::post('/send-valid-slack-notification', [SlackNotificationController::class, 'sendValidSlackNotification']);
 Route::post('/send-channel-counts', [SlackNotificationController::class, 'sendChannelCounts']);
 
