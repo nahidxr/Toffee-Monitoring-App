@@ -242,7 +242,7 @@
   <div class="mosaic-container">
    @foreach($cprofile_list as $channel)
     <div class="channel-item" id="channel{{ $channel->id }}">
-        <a href="#" class="playButton" data-channel-link="{{ $channel->Profile_link }}" data-service-name="{{ \App\Enums\Service::getDescription($channel->service_name) }}">
+        <a href="#" class="playButton" data-channel-link="{{ $channel->Profile_link }}" data-service-name="{{ \App\Enums\Service::getDescription($channel->service_name) }}" data-channel-id="{{ $channel->channel_name_id }}"data-cprofile-id="{{ $channel->id }}">
             <img src="{{ url('upload/images/'.$channel->image) }}" class="brand-image elevation-3" style="opacity: .8; border-left-style: solid; margin-left: 0px; border-left-width: 0px; height: 100x; width:100px; margin-top: 10px;">
           </a>      
         <div class="channel-name" style="text-align: center;">{{ $channel->cname->name }}</div>
@@ -372,12 +372,15 @@ function checkChannelsSequentially() {
       var playButton = channelItem.querySelector('.playButton');
       var channelLink = playButton.dataset.channelLink;
       var serviceName = playButton.dataset.serviceName; // Get the service name
-      // console.log(serviceName);
-      fetchChannelLink(channelLink,channelItem,serviceName);
+      var channelId = playButton.dataset.channelId; // Get the channel_name_id
+      var channelProfileId = playButton.dataset.cprofileId; // Get Profile ID
+
+      //  console.log(channelProfileId);
+      fetchChannelLink(channelLink,channelItem,serviceName,channelId,channelProfileId);
     });
   }
 // Fetch and log the response from the channel link
-function fetchChannelLink(channelLink,channelItem,serviceName) {
+function fetchChannelLink(channelLink,channelItem,serviceName,channelId,channelProfileId) {
   fetch(channelLink)
     .then(response => {
       if (!response.ok) {
@@ -394,7 +397,7 @@ function fetchChannelLink(channelLink,channelItem,serviceName) {
       // console.log(generatedURLs);
 
          // Fetch responses from generated URLs and log them
-         fetchAndLogAllResponses(generatedURLs,channelItem,serviceName);      
+         fetchAndLogAllResponses(generatedURLs,channelItem,serviceName,channelId,channelProfileId);      
       // You can process or handle the stream information further here as needed
     })
     .catch(error => {
@@ -431,7 +434,7 @@ function generateFullURLs(responseText, baseURL) {
 
 
 // Function to fetch responses from all URLs and log them
-function fetchAndValidateAllUrls(urls, channelItem,serviceName) {
+function fetchAndValidateAllUrls(urls, channelItem,serviceName,channelId,channelProfileId) {
   const promises = urls.map(urlData =>
     fetch(urlData.fullURL)
       .then(response => {
@@ -440,7 +443,7 @@ function fetchAndValidateAllUrls(urls, channelItem,serviceName) {
         }
         return response.text();
       })
-      .then(data => validateResponse(data, urlData.channel,channelItem,serviceName)) // Pass channel data to validateResponse
+      .then(data => validateResponse(data, urlData.channel,channelItem,serviceName,channelId,channelProfileId)) // Pass channel data to validateResponse
       .catch(error => {
         console.error(`There was a problem with the fetch operation for ${urlData.fullURL}:`, error);
         return 'Invalid'; // Return 'Invalid' status if there's an error
@@ -455,11 +458,13 @@ function fetchAndValidateAllUrls(urls, channelItem,serviceName) {
 }
 
 // Send notification for Invalid channel
-function sendInvalidSlackNotification(channelData, serviceName) {
+function sendInvalidSlackNotification(channelData, serviceName,channelId,channelProfileId) {
   const data = {
     channelData: channelData,
     serviceName: serviceName,
-    status: 'Invalid'
+    status: 'Invalid',
+    channelId: channelId,
+    channelProfileId: channelProfileId
   };
 
   fetch('/send-invalid-slack-notification', {
@@ -488,11 +493,13 @@ function getCSRFToken() {
 
 
 // Send notification for valid channel
-function sendValidSlackNotification(channelData, serviceName) {
+function sendValidSlackNotification(channelData, serviceName,channelId,channelProfileId) {
   const data = {
     channelData: channelData,
     serviceName: serviceName,
-    status: 'Valid'
+    status: 'Valid',
+    channelId:channelId,
+    channelProfileId: channelProfileId
   };
 
   fetch('/send-valid-slack-notification', {
@@ -575,7 +582,7 @@ function countAndSendChannelCounts() {
 // Retrieve the list of previously notified invalid channels from localStorage
  let notifiedInvalidChannels = JSON.parse(localStorage.getItem('notifiedInvalidChannels')) || [];
 
-function validateResponse(data, channel, channelItem,serviceName) {
+function validateResponse(data, channel, channelItem,serviceName,channelId,channelProfileId) {
   const channelParts = channel.split('_');
   const lastPart = channelParts[channelParts.length - 1];
   const lastThreeDigits = lastPart.slice(-3);
@@ -595,7 +602,7 @@ function validateResponse(data, channel, channelItem,serviceName) {
       myDiv.removeChild(existingButtonWithSameDigits);
     }
 
-      sendValidSlackNotification(channel,serviceName);
+      sendValidSlackNotification(channel,serviceName,channelId,channelProfileId);
     return 'Valid';
   } else {
     const myDiv = channelItem.querySelector('.mybutton');
@@ -615,7 +622,7 @@ function validateResponse(data, channel, channelItem,serviceName) {
       myDiv.appendChild(myButton);
 
       // Only send Slack notification if the channel is invalid and not previously notified
-        sendInvalidSlackNotification(channel,serviceName);
+        sendInvalidSlackNotification(channel,serviceName,channelId,channelProfileId);
         
 
       return 'Invalid';
@@ -645,8 +652,8 @@ function updateChannelStatus(channelItem, status) {
 }
 
 // Modify the existing function where all responses are fetched and validated
-function fetchAndLogAllResponses(urls, channelItem,serviceName) {
-  fetchAndValidateAllUrls(urls, channelItem,serviceName);
+function fetchAndLogAllResponses(urls, channelItem,serviceName,channelId,channelProfileId) {
+  fetchAndValidateAllUrls(urls, channelItem,serviceName,channelId,channelProfileId);
 }
 // Open modal and play video when play button is clicked
   var playButtons = document.querySelectorAll('.playButton');

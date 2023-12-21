@@ -16,4 +16,12 @@ class NotifiedChannel extends Model
         'channel',
         'channel_status',
     ];
+    public function cname()
+    {
+        return $this->belongsTo(Cname::class,'channel_name_id');
+    }
+    public function cprofile()
+    {
+        return $this->belongsTo(Cprofile::class,'cprofile_id');
+    }
 }

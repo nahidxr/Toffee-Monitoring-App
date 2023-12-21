@@ -8,9 +8,10 @@
         <div class="inner">
         <h4 style="color: #fff; font-weight: bold;">Channel Status</h4>
             <p>
-                Total : 150 <br>
-                Inactive : 50 <br>
-                Not Functional : 50 <br>
+
+                Total: {{ $total_profiles }} <br>
+                Inactive : {{ $inactive_channels}} <br>
+                Not Functional : {{ $inactiveChannelsCount }} <br>
                 
             </p>
         </div>
@@ -20,10 +21,11 @@
     </div>
 </div>
 
-  <!-- ./col -->
+
+<!-- 
   <div class="col-lg-3 col-6">
-    <!-- small box -->
-    <div class="small-box bg-success">
+
+  <div class="small-box bg-success">
       <div class="inner">
         <h3>53</h3>
 
@@ -34,9 +36,10 @@
       </div>
     </div>
   </div>
-    <!-- ./col -->
-    <div class="col-lg-3 col-6">
-    <!-- small box -->
+
+
+
+  <div class="col-lg-3 col-6">
     <div class="small-box bg-danger">
       <div class="inner">
         <h3>65</h3>
@@ -48,7 +51,8 @@
       </div>
     </div>
   </div>
-  <!-- ./col -->
+
+
   <div class="col-lg-3 col-6">
 
     <div class="small-box bg-warning">
@@ -61,9 +65,16 @@
         <i class="ion ion-person-add"></i>
       </div>
     </div>
-  </div>
+  </div> -->
 
   <!-- ./col -->
 </div>
+
+<script>
+    // Reload the page every minute (60,000 milliseconds)
+    setInterval(function() {
+        location.reload();
+    }, 60000);
+</script>
 
 @endsection

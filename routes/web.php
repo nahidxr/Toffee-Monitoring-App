@@ -11,6 +11,8 @@ use App\Http\Controllers\SlackNotificationController;
 use App\Http\Controllers\ChannelPlayingController;
 use App\Http\Controllers\TestController;
 use App\Models\Cprofile;
+use App\Models\NotifiedChannel;
+
 
 
 
@@ -25,43 +27,35 @@ use App\Models\Cprofile;
 |
 */
 
-
-
-
-
-
-
-// Route::get('/dashboard', [DashboardController::class, 'index']);
-
 Route::get('/dashboard', function () {
-    // $data['cprofile_list'] = Cprofile::get();
-    return view('admin.dashboard.index');
+    $data['total_profiles'] = Cprofile::count();
+    $data['inactive_channels'] = Cprofile::where('status', 0)->count();
+    // $data['inactiveChannelsCount'] = NotifiedChannel::where('channel_status', 'Invalid')
+    //                                     ->selectRaw('count(*) as count, channel_name_id')
+    //                                     ->groupBy('channel_name_id')
+    //                                     ->get()
+    //                                     ->count();
+    $data['inactiveChannelsCount'] = NotifiedChannel::where('channel_status', 'Invalid')
+    ->whereIn('channel_name_id', function ($query) {
+        $query->select('channel_name_id')
+            ->from('notified_channels')
+            ->where('channel_status', 'Invalid')
+            ->groupBy('channel_name_id');
+      })
+    ->whereIn('channel_name_id', function ($query) {
+    $query->select('channel_name_id')
+    ->from('cprofiles')
+    ->where('status', 1)
+    ->groupBy('channel_name_id');
+    })
+    ->selectRaw('count(*) as count, channel_name_id')
+    ->groupBy('channel_name_id')
+    ->get()
+    ->count();
+
+    return view('admin.dashboard.index' ,$data);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-
-// // channel name
-// Route::get('/channel_name', [CnameController::class, 'index']);
-// Route::get('/channel_name/create', [CnameController::class, 'create']);
-// Route::post('/channel_name', [CnameController::class, 'store']);
-// Route::get('/channel_name/{id}/edit', [CnameController::class, 'edit']);
-// Route::put('/channel_name/{id}', [CnameController::class, 'update']);
-// Route::delete('/channel_name/{id}', [CnameController::class, 'destroy']);
-
-
-// // channel profile
-
-// Route::get('/channel_profile', [CprofileController::class, 'index']);
-// Route::get('/channel_profile/create', [CprofileController::class, 'create']);
-// Route::post('/channel_profile', [CprofileController::class, 'store']);
-// Route::get('/channel_profile/{id}/edit', [CprofileController::class, 'edit']);
-// Route::put('/channel_profile/{id}', [CprofileController::class, 'update']);
-// Route::delete('/channel_profile/{id}', [CprofileController::class, 'destroy']);
-
-// //channel checking
-// Route::get('/channel_checking', [ChannelCheckController::class, 'index']);
-// Route::post('/send-slack-notification', [ChannelCheckController::class, 'sendInvalidSlackNotification']);
-// Route::post('/send-valid-slack-notification', [ChannelCheckController::class, 'sendValidSlackNotification']);
-// Route::post('/send-channel-counts', [ChannelCheckController::class, 'sendChannelCounts']);
 
 
 //TestController

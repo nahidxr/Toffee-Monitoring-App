@@ -19,7 +19,38 @@ class DashboardController extends Controller
         //  $data['cprofile_list'] = Cprofile::get();
         // return view('admin.dashboard.index', $data);
      
-        return view('admin.dashboard.index');
+        $data['total_profiles'] = Cprofile::count();
+        $data['inactive_channels'] = Cprofile::where('status', 0)->count();
+
+        // $data['inactiveChannelsCount'] = NotifiedChannel::where('channel_status', 'Invalid')
+        //                                 ->selectRaw('count(*) as count, channel_name_id')
+        //                                 ->groupBy('channel_name_id')
+        //                                 ->get()
+        //                                 ->count();
+
+        $data['inactiveChannelsCount'] = NotifiedChannel::where('channel_status', 'Invalid')
+                                        ->whereIn('channel_name_id', function ($query) {
+                                            $query->select('channel_name_id')
+                                                ->from('notified_channels')
+                                                ->where('channel_status', 'Invalid')
+                                                ->groupBy('channel_name_id');
+                                          })
+                                        ->whereIn('channel_name_id', function ($query) {
+                                        $query->select('channel_name_id')
+                                        ->from('cprofiles')
+                                        ->where('status', 1)
+                                        ->groupBy('channel_name_id');
+                                        })
+                                        ->selectRaw('count(*) as count, channel_name_id')
+                                        ->groupBy('channel_name_id')
+                                        ->get()
+                                        ->count();
+
+
+         // Other data or operations
+        return view('admin.dashboard.index', $data);
+    
+
     }
 
     /**
