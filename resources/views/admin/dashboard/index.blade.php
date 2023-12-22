@@ -74,7 +74,7 @@
     // Reload the page every minute (60,000 milliseconds)
     setInterval(function() {
         location.reload();
-    }, 60000);
+    }, 10000);
 </script>
 
 @endsection

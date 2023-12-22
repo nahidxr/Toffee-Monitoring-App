@@ -144,11 +144,20 @@
                     </a>
                 </td>
                 <td>{{ \App\Enums\Service::getDescription($item->service_name) }}</td>
-                <td>
+                <!-- <td>
                    <a href="{{ $item->transcoder_info }}" target="_blank">
                     Transcoder Link <i class="fas fa-external-link-alt"></i>
                     </a>
-                </td>
+                </td> -->
+                <td>
+                  @if (isset($item->transcoderLinks))
+                      <ol>
+                          @foreach ($item->transcoderLinks as $index => $link)
+                              <li><a href="{{ $link }}" target="_blank">Transcoder Link<i class="fas fa-external-link-alt"></i></a></li>
+                          @endforeach
+                      </ol>
+                  @endif
+              </td>
                 @if($userType === 'admin')
                     <td>
                         @if($item->status === \App\Enums\ChannelStatus::Active)

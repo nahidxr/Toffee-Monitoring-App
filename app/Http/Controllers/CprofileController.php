@@ -17,10 +17,24 @@ use Illuminate\Support\Facades\Validator;
 class CprofileController extends Controller
 {
  
+    // public function index()
+    // {
+    //     $data['cprofile_list'] = Cprofile::get();
+    //     return view('admin.channel_profile.index', $data);
+    // }
     public function index()
     {
-        $data['cprofile_list'] = Cprofile::get();
-        return view('admin.channel_profile.index', $data);
+        // Fetch all records from the cprofiles table
+        $cprofile_list = Cprofile::get();
+    
+        // Iterate through each Cprofile record and explode the transcoder_info string into an array of links
+        foreach ($cprofile_list as $cprofile) {
+            // Explode the transcoder_info string based on the appropriate delimiter
+            $cprofile->transcoderLinks = explode(',', $cprofile->transcoder_info);
+        }
+    
+        // Pass the modified data to the view
+        return view('admin.channel_profile.index', ['cprofile_list' => $cprofile_list]);
     }
 
     public function create()
@@ -57,7 +71,9 @@ class CprofileController extends Controller
         $data->Profile_link = $request->plink;
         $data->status = $request->status;
         $data->service_name = $request->service_name;
-        $data->transcoder_info = $request->transcoder_info;
+        // $data->transcoder_info = $request->transcoder_info;
+        $data->transcoder_info = implode(', ', $request->transcoder_info);
+
         
         if ($request->hasFile('image')) {
             $file = $request->file('image');
@@ -126,7 +142,9 @@ class CprofileController extends Controller
         $data->Profile_link = $request->plink;
         $data->status = $request->status;
         $data->service_name = $request->service_name;
-        $data->transcoder_info = $request->transcoder_info;
+        // $data->transcoder_info = $request->transcoder_info;
+        $data->transcoder_info = implode(', ', $request->transcoder_info);
+
     
         // Handle image update
         if ($request->hasFile('image')) {

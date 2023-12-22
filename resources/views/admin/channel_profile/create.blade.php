@@ -74,9 +74,13 @@
               </div>
 
               {{-- transcode Info --}}
-              <div class="form-group">
+              <!-- <div class="form-group">
                 <label for="exampleInputEmail1">Transcoder Info</label>
                 <input type="text" class="form-control" name="transcoder_info" id="transcoder" value="{{ old('transcoder_info') }}" placeholder="Enter Transcoder Info">
+              </div> -->
+              <div class="form-group">
+                <label for="transcoderInfo">Transcoder Info</label>
+                <input type="text" class="form-control" name="transcoder_info[]" id="transcoder" value="{{ old('transcoder_info') }}" placeholder="Enter Transcoder Info">
               </div>
               {{-- channel status --}}
 
