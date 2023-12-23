@@ -153,7 +153,7 @@
                   @if (isset($item->transcoderLinks))
                       <ol>
                           @foreach ($item->transcoderLinks as $index => $link)
-                              <li><a href="{{ $link }}" target="_blank">Transcoder Link<i class="fas fa-external-link-alt"></i></a></li>
+                              <li><a href="{{ $link }}" target="_blank">TC Link <i class="fas fa-external-link-alt"></i></a></li>
                           @endforeach
                       </ol>
                   @endif

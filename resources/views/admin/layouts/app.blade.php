@@ -20,7 +20,8 @@
   <!-- Navbar -->
   <nav class="main-header navbar navbar-expand navbar-white navbar-light">
     <!-- Left navbar links -->
-    <ul class="navbar-nav">
+
+    <!-- <ul class="navbar-nav">
       <li class="nav-item">
         <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
       </li>
@@ -36,7 +37,29 @@
         </form>
     </li>
   
+    </ul> -->
+
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="{{ url('/dashboard') }}" class="nav-link">Home</a>
+        </li>
     </ul>
+
+    <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <!-- style="flex: 1; padding: 8px 16px; background-color: #e6337a; color: white; text-decoration: none; border-radius: 4px; border: none; cursor: pointer;" -->
+                <button type="submit" class="nav-link" style=" background-color: #e6337a; border: none; color: white; border-radius: 10px; cursor: pointer; margin-left: 850px;">
+                    Logout
+                </button>
+            </form>
+        </li>
+    </ul>
+
 
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
