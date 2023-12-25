@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Cprofile;
+use App\Models\NotifiedChannel;
 
 
 class DashboardController extends Controller
