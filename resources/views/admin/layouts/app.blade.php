@@ -52,7 +52,6 @@
         <li class="nav-item">
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <!-- style="flex: 1; padding: 8px 16px; background-color: #e6337a; color: white; text-decoration: none; border-radius: 4px; border: none; cursor: pointer;" -->
                 <button type="submit" class="nav-link" style=" background-color: #e6337a; border: none; color: white; border-radius: 10px; cursor: pointer; margin-left: 850px;">
                     Logout
                 </button>
