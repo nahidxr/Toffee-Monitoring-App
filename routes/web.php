@@ -57,7 +57,7 @@ Route::get('/dashboard', function () {
 
 //TestController
 Route::get('/test',[TestController::class,'index']);
-// Route::get('/post',[TestController::class,'test']);
+Route::get('/post',[TestController::class,'test']);
 
 
 
@@ -134,7 +134,7 @@ Route::get('/', function () {
 
 
 
-Route::get('/test',[TestController::class,'index']);
+// Route::get('/test',[TestController::class,'index']);
 
 require __DIR__.'/auth.php';
 

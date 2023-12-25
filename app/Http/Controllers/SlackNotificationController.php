@@ -40,7 +40,7 @@ class SlackNotificationController extends Controller
                 }
 
                 // Send the notification to Slack using the webhook URL
-                $webhookUrl = 'https://hooks.slack.com/services/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';
+                $webhookUrl = 'https://hooks.slack.com/services/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';
 
                 $response = Http::post($webhookUrl, [
                     // 'text' => ">Channel Profile failed for: $channelData on Service: $serviceName",
@@ -74,7 +74,7 @@ class SlackNotificationController extends Controller
             ]);
 
             // Send the notification to Slack using the webhook URl
-            $webhookUrl = 'https://hooks.slack.com/services/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';
+            $webhookUrl = 'https://hooks.slack.com/services/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';
 
             $response = Http::post($webhookUrl, [
                 // 'text' => ">Channel Profile failed for: $channelData on Service: $serviceName",
@@ -124,7 +124,7 @@ class SlackNotificationController extends Controller
             }
 
             // Send the notification to Slack using the webhook URL
-            $webhookUrl = 'https://hooks.slack.com/services/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';
+            $webhookUrl = 'https://hooks.slack.com/services/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';
 
             $response = Http::post($webhookUrl, [
                 // 'text' => ">Channel Profile Successful for: $channelData on Service: $serviceName :green_circle:",
@@ -162,7 +162,7 @@ class SlackNotificationController extends Controller
         ]);
 
         // Send the notification to Slack using the webhook URL (Uncomment this block if necessary)
-        $webhookUrl = 'https://hooks.slack.com/services/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';
+        $webhookUrl = 'https://hooks.slack.com/services/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';
 
         $response = Http::post($webhookUrl, [
             'text' => "Channel Profile Successful for: $channelData on Service: $serviceName",
