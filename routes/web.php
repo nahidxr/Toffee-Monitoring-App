@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
-
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CnameController;
 use App\Http\Controllers\CprofileController;
@@ -11,6 +10,7 @@ use App\Http\Controllers\SlackNotificationController;
 use App\Http\Controllers\ChannelPlayingController;
 use App\Http\Controllers\ApplicationNameController;
 use App\Http\Controllers\AppDetailsController;
+use App\Http\Controllers\ApplicationStatusController;
 use App\Http\Controllers\TestController;
 use App\Models\Cprofile;
 use App\Models\NotifiedChannel;
@@ -85,20 +85,12 @@ Route::post('/send-invalid-slack-notification', [SlackNotificationController::cl
 Route::post('/send-valid-slack-notification', [SlackNotificationController::class, 'sendValidSlackNotification']);
 Route::post('/send-channel-counts', [SlackNotificationController::class, 'sendChannelCounts']);
 
-//dashboard
-// Route::get('/dashboard', [DashboardController::class, 'index']);
-
 //channe
 Route::get('/channel_playing', [ChannelPlayingController::class, 'index']);
 
 //server health checking
 
-// Route::resource('Settings/appdetails', App\Http\Controllers\AppdetailController::class);
-// Route::resource('Settings/ApplicationName', App\Http\Controllers\ApplicationNameController::class);
-
-
-// Route::resource('application-names', ApplicationNameController::class);
-// channel name
+// Application name
 Route::get('/app_name', [ApplicationNameController::class, 'index']);
 Route::get('/app_name/create', [ApplicationNameController::class, 'create']);
 Route::post('/app_name', [ApplicationNameController::class, 'store']);
@@ -106,13 +98,16 @@ Route::get('/app_name/{id}/edit', [ApplicationNameController::class, 'edit']);
 Route::put('/app_name/{id}', [ApplicationNameController::class, 'update']);
 Route::delete('/app_name/{id}', [ApplicationNameController::class, 'destroy']);
 
-// channel profile
+// Application Details
 Route::get('/app_details', [AppDetailsController::class, 'index']);
 Route::get('/app_details/create', [AppDetailsController::class, 'create']);
 Route::post('/app_details', [AppDetailsController::class, 'store']);
 Route::get('/app_details/{id}/edit', [AppDetailsController::class, 'edit']);
 Route::put('/app_details/{id}', [AppDetailsController::class, 'update']);
 Route::delete('/app_details/{id}', [AppDetailsController::class, 'destroy']);
+
+//Application Status
+Route::get('/application_status', [ApplicationStatusController::class, 'index']);
 
   
 });

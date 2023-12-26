@@ -38,9 +38,9 @@
             <td>{{ \App\Enums\Service::getDescription($channel->service_name) }}</td>
             <td class="status">
                 @if($channel->overall_channel_status === 'valid')
-                <span style="color: green;"><i class="fas fa-check-circle"></i> Status: Active</span>
+                <span style="color: green;"><i class="fas fa-check-circle"></i> Status: Playing</span>
                 @else
-                <span style="color: red;"><i class="fas fa-times-circle"></i> Status: Inactive</span>
+                <span style="color: red;"><i class="fas fa-times-circle"></i> Status: Stop</span>
                 @endif
             </td>
         </tr>
