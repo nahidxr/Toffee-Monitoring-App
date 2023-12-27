@@ -13,7 +13,7 @@ class TestController extends Controller
    public function index()
     {
         
-        $ip = '192.168.5.4'; // IP address to ping
+        $ip = '172.20.10.46'; // IP address to ping
         
         $process = new Process(['ping', '-c', '4', $ip]); // Perform a ping with 4 packets
         $process->run();
@@ -30,11 +30,13 @@ class TestController extends Controller
     
     public function test()
     {
-        $ip = '192.168.5.2'; // Replace with your IP address
+        $ip = '172.20.10.61'; // Replace with your IP address
         $port = '80'; // Replace with the port you want to check
 
         try {
-            $response = Http::timeout(1)->get("http://$ip:$port");
+            $response = Http::timeout(5)->get("http://$ip:$port");
+
+            dd($response);
 
             $statusCode = $response->status();
 

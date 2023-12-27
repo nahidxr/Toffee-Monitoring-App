@@ -13,14 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('application_details', function (Blueprint $table) {
+        Schema::create('application_status', function (Blueprint $table) {
             $table->id();
-            $table->string('node_name');
-            $table->foreignId('app_name_id')->constrained('application_names');
-            $table->string('ip');
-            $table->integer('location')->default(0);
-            $table->string('connection_type');
-            $table->string('owner');
+            $table->foreignId('app_detail_id')->constrained('application_details');
+            $table->date('reported_date')->nullable();
+            $table->time('reported_time')->nullable();
+            $table->string('type')->nullable();
             $table->integer('status')->default(0);
             $table->timestamps();
         });
@@ -33,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('application_details');
+        Schema::dropIfExists('application_status');
     }
 };

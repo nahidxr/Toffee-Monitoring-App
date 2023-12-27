@@ -122,8 +122,14 @@ class ApplicationNameController extends Controller
     {
         try {
             $aName = ApplicationName::findOrFail($id);
+    
+            // Detach related records from the pivot table
+            $aName->applicationDetails()->detach();
+    
+            // Delete the ApplicationName record
             $aName->delete();
-            return redirect("/app_name")->with('success', 'Channel deleted successfully.');
+    
+            return redirect("/app_name")->with('success', 'Record deleted successfully.');
         } catch (QueryException $e) {
             return redirect("/app_name")->with('error', 'Cannot delete the channel due to related records.');
         }

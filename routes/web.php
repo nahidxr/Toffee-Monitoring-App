@@ -57,7 +57,8 @@ Route::get('/dashboard', function () {
 
 //TestController
 Route::get('/test',[TestController::class,'index']);
-Route::get('/post',[TestController::class,'test']);
+Route::get('/post',[TestController::class,'index']);
+// Route::get('/post',[ApplicationStatusController::class,'test']);
 
 
 
@@ -108,6 +109,7 @@ Route::delete('/app_details/{id}', [AppDetailsController::class, 'destroy']);
 
 //Application Status
 Route::get('/application_status', [ApplicationStatusController::class, 'index']);
+// Route::get('/test', [ApplicationStatusController::class, 'index']);
 
   
 });

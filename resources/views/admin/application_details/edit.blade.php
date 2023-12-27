@@ -73,7 +73,7 @@
               </div>
 
               {{-- service name --}}
-              <div class="form-group">
+              <!-- <div class="form-group">
                 <label  for="category">App Name List</label>
                     <select name="app_name_id" class="form-control">
                         <option value="">Select a Application</option>
@@ -82,7 +82,22 @@
                         </option>
                         @endforeach
                     </select>
+              </div> -->
+
+              <div class="form-group">
+              <label>App Name</label>
+              <div class="checkbox-list">
+                  @foreach ($app_list as $item)
+                      <div class="custom-control custom-checkbox">
+                          <input type="checkbox" class="custom-control-input" id="app_{{ $item->id }}" name="app_name_id[]" value="{{ $item->id }}" {{ in_array($item->id, $selected_app_ids) ? 'checked' : '' }}>
+                          <label class="custom-control-label" for="app_{{ $item->id }}">{{ $item->name }}</label>
+                      </div>
+                  @endforeach
               </div>
+          </div>
+
+
+
 
               {{-- channel status --}}
 

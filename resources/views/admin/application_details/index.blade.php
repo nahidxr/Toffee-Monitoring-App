@@ -71,7 +71,7 @@
         @foreach ($appDetails_list as $item)
         <tr class="channel-row">
           <td>{{ $serialNumber++ }}</td>
-          <td>{{ $item->applicationName->name }}</td>
+          <td>{{ $item->node_name }}</td>
           <td>{{ $item->ip }}</td>
           <td>{{ \App\Enums\Location::getDescription($item->location) }}</td>
           <td>{{ $item->connection_type }}</td>
