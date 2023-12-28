@@ -66,7 +66,7 @@ class SlackNotificationController extends Controller
 
                 
                 // Send the notification to Slack using the webhook URL
-                $webhookUrl = 'https://hooks.slack.com/services/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';
+                $webhookUrl = getenv('SLACK_WEBHOOK_URL');
 
                 $incidentLink = "http://192.168.5.229/";
 
@@ -108,7 +108,7 @@ class SlackNotificationController extends Controller
             ]);
 
             // Send the notification to Slack using the webhook URl
-            $webhookUrl = 'https://hooks.slack.com/services/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';
+            $webhookUrl = getenv('SLACK_WEBHOOK_URL');
 
             $incidentLink = "http://192.168.5.229/";
 
@@ -178,7 +178,7 @@ class SlackNotificationController extends Controller
             }
 
             // Send the notification to Slack using the webhook URL
-            $webhookUrl = 'https://hooks.slack.com/services/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';
+            $webhookUrl = getenv('SLACK_WEBHOOK_URL');
 
             $incidentLink = "http://192.168.5.229/";
 
@@ -227,7 +227,7 @@ class SlackNotificationController extends Controller
         ]);
 
         // Send the notification to Slack using the webhook URL (Uncomment this block if necessary)
-        $webhookUrl = 'https://hooks.slack.com/services/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';
+        $webhookUrl = getenv('SLACK_WEBHOOK_URL');
 
         // Retrieve the previous incident number before updating
         $previousIncidentNumber = $existingChannel->incident_number;
@@ -264,7 +264,49 @@ class SlackNotificationController extends Controller
     }
 }
 
-    public function sendChannelCounts()
+// public function sendChannelCounts()
+// {
+//     // Get counts for the different channel statuses
+//     $total_profiles = Cprofile::count();
+//     $inactive_channels = Cprofile::where('status', 0)->count();
+
+//     $inactiveChannelsCount = NotifiedChannel::where('channel_status', 'Invalid')
+//         ->whereIn('channel_name_id', function ($query) {
+//             $query->select('channel_name_id')
+//                 ->from('notified_channels')
+//                 ->where('channel_status', 'Invalid')
+//                 ->groupBy('channel_name_id');
+//         })
+//         ->whereIn('channel_name_id', function ($query) {
+//             $query->select('channel_name_id')
+//                 ->from('cprofiles')
+//                 ->where('status', 1)
+//                 ->groupBy('channel_name_id');
+//         })
+//         ->selectRaw('count(*) as count, channel_name_id')
+//         ->groupBy('channel_name_id')
+//         ->get()
+//         ->count();
+
+//     // Construct the message for Slack notification
+//     $message = "Total Channels: $total_profiles\nInactive Channels: $inactive_channels\nNot Functional Channels: $inactiveChannelsCount";
+
+//     // Send the notification to Slack using the webhook URL
+//     $webhookUrl = getenv('SLACK_WEBHOOK_URL');
+
+//     $response = Http::post($webhookUrl, [
+//         'text' => $message,
+//     ]);
+
+//     // Check if the notification was sent successfully
+//     if ($response->successful()) {
+//         $this->info('Slack notification sent successfully.');
+//     } else {
+//         $this->error('Failed to send Slack notification.');
+//     }
+// }
+
+public function sendChannelCounts()
 {
     // Get counts for the different channel statuses
     $total_profiles = Cprofile::count();
@@ -289,13 +331,21 @@ class SlackNotificationController extends Controller
         ->count();
 
     // Construct the message for Slack notification
-    $message = "Total Channels: $total_profiles\nInactive Channels: $inactive_channels\nNot Functional Channels: $inactiveChannelsCount";
+    $message = "*Channel Summary*\n\nTotal Channels: $total_profiles\nInactive Channels: $inactive_channels\nNot Functional Channels: $inactiveChannelsCount";
 
     // Send the notification to Slack using the webhook URL
-    $webhookUrl = 'https://hooks.slack.com/services/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';
+    $webhookUrl = getenv('SLACK_WEBHOOK_URL');
+
+    $attachment = [
+        [
+            'color' => '#e6337a', // Choose the attachment color
+            'text' => $message,
+        ],
+    ];
 
     $response = Http::post($webhookUrl, [
-        'text' => $message,
+        'text' => '',
+        'attachments' => $attachment,
     ]);
 
     // Check if the notification was sent successfully
@@ -305,4 +355,7 @@ class SlackNotificationController extends Controller
         $this->error('Failed to send Slack notification.');
     }
 }
+
+
+
 }
