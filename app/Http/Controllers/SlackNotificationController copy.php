@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Models\NotifiedChannel;
 use App\Models\Cprofile;
-use Illuminate\Support\Str;
 
 
 class SlackNotificationController extends Controller
@@ -20,36 +19,13 @@ class SlackNotificationController extends Controller
         $channelId = $request->input('channelId');
         $channelProfileId = $request->input('channelProfileId');
 
-                // Generate a random string of length 12 for the middle section
-        $randomString = Str::random(12);
-
-        // Concatenate the components to create the final incident number
-        $incidentNumber = '0.' . $randomString;
-
         // Check if the channel exists in notified_channels table and its status
         $existingChannel = NotifiedChannel::where('channel', $channelData)->first();
 
-        // $transcoderInfo = Cprofile::where('Profile_name', $channelData)
-        //                             ->where('id', $channelProfileId)
-        //                             ->value('transcoder_info');
-        // $cprofile = Cprofile::where('Profile_name', $channelData)
-        //                     ->where('id', $channelProfileId)
-        //                     ->first();
-
-        // if ($cprofile) {
-        //     $transcoderInfo = explode(', ', $cprofile->transcoder_info);
-        //     // $transcoderInfo now contains the transcoder info as an array
-        // } else {
-        //     // Handle case when no matching record is found
-        //     $errorMessage = 'No matching record found in cprofiles for the given channel data and profile ID.';
-        //     // Perform further actions, such as logging the error, returning an error response, or setting default values for $transcoderInfo
-        // }
-        
         if ($existingChannel) {
             if ($existingChannel->channel_status === 'Valid') {
                 // If the channel exists and is marked as valid, update it to be invalid
                 $existingChannel->update(['channel_status' => 'Invalid']);
-                $existingChannel->update(['incident_number' => $incidentNumber]);
 
                 // Update the channel_name_id if it's different from the current one
                 if ($existingChannel->channel_name_id !== $channelId) {
@@ -64,33 +40,24 @@ class SlackNotificationController extends Controller
                     $existingChannel->save();
                 }
 
-                
                 // Send the notification to Slack using the webhook URL
                 $webhookUrl = 'https://hooks.slack.com/services/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';
 
-                $incidentLink = "http://192.168.5.229/";
-
                 $response = Http::post($webhookUrl, [
-                    'text' => "Incident <$incidentLink|#$incidentNumber> is ongoing",
+                    // 'text' => ">Channel Profile failed for: $channelData on Service: $serviceName",
                     'attachments' => [
                         [
-                            'color' => 'danger', // Red color for a failed profile
-                            'fields' => [
-                                [
-                                    'title' => '*Channel Profile*',
-                                    'value' => $channelData,
-                                    'short' => true, // Displayed on a single line
-                                ],
-                                [
-                                    'title' => '*Service Name*',
-                                    'value' => $serviceName,
-                                    'short' => true, // Displayed on a single line
-                                ],
-                            ],
+                            'color' => 'danger', // Red color
+                            'text' => "Channel Profile failed for: $channelData on Service: $serviceName",
                         ],
                     ],
                 ]);
-                
+
+                if ($response->successful()) {
+                    return response()->json(['message' => 'Slack notification sent']);
+                } else {
+                    return response()->json(['error' => 'Failed to send Slack notification'], 500);
+                }
             } else {
                 // If the channel exists and is already marked as invalid, skip creating a new entry or sending Slack notification
                 return response()->json(['message' => 'Channel already marked as Invalid']);
@@ -100,7 +67,7 @@ class SlackNotificationController extends Controller
             NotifiedChannel::create([
                 'source_provider' => 'null', // Replace with appropriate data
                 'service' => $serviceName, // Replace with appropriate data
-                // 'incident_number' =>$incidentNumber, // Replace with appropriate data
+                'incident_number' => 'null', // Replace with appropriate data
                 'channel' => $channelData,
                 'channel_status' => $status, // Store status received from the request
                 'channel_channel_name_id' => $channelId, // Store channelId received from the request
@@ -110,29 +77,15 @@ class SlackNotificationController extends Controller
             // Send the notification to Slack using the webhook URl
             $webhookUrl = 'https://hooks.slack.com/services/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';
 
-            $incidentLink = "http://192.168.5.229/";
-
             $response = Http::post($webhookUrl, [
-                'text' => "Incident <$incidentLink|#$incidentNumber> is ongoing",
+                // 'text' => ">Channel Profile failed for: $channelData on Service: $serviceName",
                 'attachments' => [
                     [
-                        'color' => 'danger', // Red color for a failed profile
-                        'fields' => [
-                            [
-                                'title' => '*Channel Profile*',
-                                'value' => $channelData,
-                                'short' => true, // Displayed on a single line
-                            ],
-                            [
-                                'title' => '*Service Name*',
-                                'value' => $serviceName,
-                                'short' => true, // Displayed on a single line
-                            ],
-                        ],
+                        'color' => 'danger', // Red color
+                        'text' => "Channel Profile failed for: $channelData on Service: $serviceName",
                     ],
                 ],
             ]);
-            
 
             if ($response->successful()) {
                 return response()->json(['message' => 'Slack notification sent']);
@@ -158,12 +111,6 @@ class SlackNotificationController extends Controller
         if ($existingChannel->channel_status === 'Invalid') {
             // If the channel exists and is marked as invalid, update it to be valid
             $existingChannel->update(['channel_status' => 'Valid']);
-
-            // Retrieve the previous incident number before updating
-             $previousIncidentNumber = $existingChannel->incident_number;
-            
-            $existingChannel->update(['incident_number' => null]); // Set incident_number to null
-
             // Update the channel_name_id if it's different from the current one
             if ($existingChannel->channel_name_id !== $channelId) {
                 $existingChannel->update(['channel_name_id' => $channelId]);
@@ -180,27 +127,16 @@ class SlackNotificationController extends Controller
             // Send the notification to Slack using the webhook URL
             $webhookUrl = 'https://hooks.slack.com/services/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';
 
-            $incidentLink = "http://192.168.5.229/";
-
             $response = Http::post($webhookUrl, [
-                'text' => "Incident <$incidentLink|#$previousIncidentNumber> is Stopped",
+                // 'text' => ">Channel Profile Successful for: $channelData on Service: $serviceName :green_circle:",
+                // 'text' => ">Channel Profile Successful for: $channelData on Service: $serviceName",
                 'attachments' => [
                     [
-                        'color' => 'good', // Red color for a failed profile
-                        'fields' => [
-                            [
-                                'title' => '*Channel Profile*',
-                                'value' => $channelData,
-                                'short' => true, // Displayed on a single line
-                            ],
-                            [
-                                'title' => '*Service Name*',
-                                'value' => $serviceName,
-                                'short' => true, // Displayed on a single line
-                            ],
-                        ],
+                        'color' => 'good', // Red color
+                        'text' => "Channel Profile Successful for: $channelData on Service: $serviceName",
                     ],
                 ],
+               
             ]);
 
             if ($response->successful()) {
@@ -229,32 +165,9 @@ class SlackNotificationController extends Controller
         // Send the notification to Slack using the webhook URL (Uncomment this block if necessary)
         $webhookUrl = 'https://hooks.slack.com/services/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';
 
-        // Retrieve the previous incident number before updating
-        $previousIncidentNumber = $existingChannel->incident_number;
-
-        $incidentLink = "http://192.168.5.229/";
-
-                $response = Http::post($webhookUrl, [
-                    'text' => "Incident <$incidentLink|#$previousIncidentNumber> is Stopped",
-                    'attachments' => [
-                        [
-                            'color' => 'good', // Red color for a failed profile
-                            'fields' => [
-                                [
-                                    'title' => '*Channel Profile*',
-                                    'value' => $channelData,
-                                    'short' => true, // Displayed on a single line
-                                ],
-                                [
-                                    'title' => '*Service Name*',
-                                    'value' => $serviceName,
-                                    'short' => true, // Displayed on a single line
-                                ],
-                            ],
-                        ],
-                    ],
-                ]);
-                
+        $response = Http::post($webhookUrl, [
+            'text' => "Channel Profile Successful for: $channelData on Service: $serviceName",
+        ]);
 
         if ($response->successful()) {
             return response()->json(['message' => 'Slack notification sent']);

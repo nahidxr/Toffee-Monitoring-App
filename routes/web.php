@@ -57,8 +57,8 @@ Route::get('/dashboard', function () {
 
 //TestController
 Route::get('/test',[TestController::class,'index']);
-Route::get('/post',[TestController::class,'index']);
-// Route::get('/post',[ApplicationStatusController::class,'test']);
+// Route::get('/post',[TestController::class,'index']);
+Route::get('/post',[ApplicationStatusController::class,'test']);
 
 
 

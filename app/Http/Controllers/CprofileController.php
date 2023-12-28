@@ -47,50 +47,106 @@ class CprofileController extends Controller
 
     }
 
-    public function store(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'pname' => 'required',
-            'channel_name_id' => 'required',
-            'plink' => 'required',
-            'status' => 'required',
-            'service_name' => 'required',
-            'transcoder_info' => 'required',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Validate image type and size
-        ]);
+    // public function store(Request $request)
+    // {
+    //     $validator = Validator::make($request->all(), [
+    //         'pname' => 'required',
+    //         'channel_name_id' => 'required',
+    //         'plink' => 'required',
+    //         'status' => 'required',
+    //         'service_name' => 'required',
+    //         'transcoder_info' => 'required',
+    //         'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Validate image type and size
+    //     ]);
     
-        if ($validator->fails()) {
-            return redirect('/channel_profile/create')
-                        ->withErrors($validator)
-                        ->withInput();
-        }
+    //     if ($validator->fails()) {
+    //         return redirect('/channel_profile/create')
+    //                     ->withErrors($validator)
+    //                     ->withInput();
+    //     }
     
-        $data = new Cprofile();
-        $data->Profile_name = $request->pname;
-        $data->channel_name_id = $request->channel_name_id;
-        $data->Profile_link = $request->plink;
-        $data->status = $request->status;
-        $data->service_name = $request->service_name;
-        // $data->transcoder_info = $request->transcoder_info;
-        $data->transcoder_info = implode(', ', $request->transcoder_info);
+    //     $data = new Cprofile();
+    //     $data->Profile_name = $request->pname;
+    //     $data->channel_name_id = $request->channel_name_id;
+    //     $data->Profile_link = $request->plink;
+    //     $data->status = $request->status;
+    //     $data->service_name = $request->service_name;
+    //     // $data->transcoder_info = $request->transcoder_info;
+    //     $data->transcoder_info = implode(', ', $request->transcoder_info);
 
         
-        if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $extension = $file->getClientOriginalExtension();
-            $filename = time() . '.' . $extension;
-            $file->move('upload/images', $filename);
-            $data->image = $filename;
-        }
+    //     if ($request->hasFile('image')) {
+    //         $file = $request->file('image');
+    //         $extension = $file->getClientOriginalExtension();
+    //         $filename = time() . '.' . $extension;
+    //         $file->move('upload/images', $filename);
+    //         $data->image = $filename;
+    //     }
     
-        $data->save();
+    //     $data->save();
+    //     $notification = [
+    //         'message' => 'Image Inserted Successfully',
+    //         'alert-type' => 'success'
+    //     ];
+    
+    //     return redirect('/channel_profile/create')->with($notification);
+    // }
+    public function store(Request $request)
+    {
+    $validator = Validator::make($request->all(), [
+        'pname' => 'required',
+        'channel_name_id' => 'required',
+        'plink' => 'required',
+        'status' => 'required',
+        'service_name' => 'required',
+        'transcoder_info' => 'required',
+        'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Validate image type and size
+    ]);
+
+    if ($validator->fails()) {
+        return redirect('/channel_profile/create')
+                    ->withErrors($validator)
+                    ->withInput();
+    }
+
+    // Check if the Profile_name already exists in the database
+    $existingProfile = Cprofile::where('Profile_name', $request->pname)->first();
+
+    if ($existingProfile) {
+        // Profile name already exists, you can handle this scenario as needed
         $notification = [
-            'message' => 'Image Inserted Successfully',
-            'alert-type' => 'success'
+            'message' => 'Profile name already exists!',
+            'alert-type' => 'error'
         ];
-    
+
         return redirect('/channel_profile/create')->with($notification);
     }
+
+    $data = new Cprofile();
+    $data->Profile_name = $request->pname;
+    $data->channel_name_id = $request->channel_name_id;
+    $data->Profile_link = $request->plink;
+    $data->status = $request->status;
+    $data->service_name = $request->service_name;
+    $data->transcoder_info = implode(', ', $request->transcoder_info);
+
+    if ($request->hasFile('image')) {
+        $file = $request->file('image');
+        $extension = $file->getClientOriginalExtension();
+        $filename = time() . '.' . $extension;
+        $file->move('upload/images', $filename);
+        $data->image = $filename;
+    }
+
+    $data->save();
+    $notification = [
+        'message' => 'Image Inserted Successfully',
+        'alert-type' => 'success'
+    ];
+
+    return redirect('/channel_profile/create')->with($notification);
+}
+
 
   
     public function show(Cprofile $cprofile)

@@ -33,7 +33,7 @@ class AppDetailsController extends Controller
     
 
     public function store(Request $request)
-{
+    {
     $validator = Validator::make($request->all(), [
         'node_name' => 'required',
         'ip' => 'required|unique:application_details', // Ensure IP is unique in application_details table

@@ -529,52 +529,53 @@ function getCSRFToken() {
 
 
 // Function to count and send channel counts to the server
-function countAndSendChannelCounts() {
-  const channelItems = document.querySelectorAll('.mosaic-container .channel-item');
 
-  let validChannels = 0;
-  let invalidChannels = 0;
+// function countAndSendChannelCounts() {
+//   const channelItems = document.querySelectorAll('.mosaic-container .channel-item');
 
-  channelItems.forEach(channelItem => {
-    const channelLight = channelItem.querySelector('.channel-light');
+//   let validChannels = 0;
+//   let invalidChannels = 0;
 
-    // Check if the channel-light span has the class light-green or light-red
-    if (channelLight.classList.contains('light-green')) {
-      validChannels++;
-    } else if (channelLight.classList.contains('light-red')) {
-      invalidChannels++;
-    }
-  });
+//   channelItems.forEach(channelItem => {
+//     const channelLight = channelItem.querySelector('.channel-light');
 
-  const totalChannels = validChannels + invalidChannels;
+//     // Check if the channel-light span has the class light-green or light-red
+//     if (channelLight.classList.contains('light-green')) {
+//       validChannels++;
+//     } else if (channelLight.classList.contains('light-red')) {
+//       invalidChannels++;
+//     }
+//   });
 
-  const countsData = {
-    totalChannels: totalChannels,
-    validChannels: validChannels,
-    invalidChannels: invalidChannels
-  };
+//   const totalChannels = validChannels + invalidChannels;
 
-  const csrfToken = getCSRFToken();
-  if (!csrfToken) {
-    console.error('CSRF token is missing or invalid.');
-    return;
-  }
+//   const countsData = {
+//     totalChannels: totalChannels,
+//     validChannels: validChannels,
+//     invalidChannels: invalidChannels
+//   };
 
-  fetch('/send-channel-counts', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-CSRF-TOKEN': csrfToken,
-    },
-    body: JSON.stringify(countsData),
-  })
-  .then(response => {
-    console.log('Channel counts sent to server:', response);
-  })
-  .catch(error => {
-    console.error('Error sending channel counts:', error);
-  });
-}
+//   const csrfToken = getCSRFToken();
+//   if (!csrfToken) {
+//     console.error('CSRF token is missing or invalid.');
+//     return;
+//   }
+
+//   fetch('/send-channel-counts', {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json',
+//       'X-CSRF-TOKEN': csrfToken,
+//     },
+//     body: JSON.stringify(countsData),
+//   })
+//   .then(response => {
+//     console.log('Channel counts sent to server:', response);
+//   })
+//   .catch(error => {
+//     console.error('Error sending channel counts:', error);
+//   });
+// }
 
 
 
