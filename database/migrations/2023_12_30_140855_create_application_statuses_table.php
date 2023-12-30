@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('application_status', function (Blueprint $table) {
+        Schema::create('application_statuses', function (Blueprint $table) {
             $table->id();
             $table->foreignId('app_detail_id')->constrained('application_details');
             $table->date('reported_date')->nullable();
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('application_status');
+        Schema::dropIfExists('application_statuses');
     }
 };

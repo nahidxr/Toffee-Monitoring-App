@@ -15,4 +15,8 @@ class ApplicationDetails extends Model
     {
         return $this->belongsToMany(ApplicationName::class, 'application_detail_application_name', 'application_detail_id', 'application_name_id');
     }
+    public function applicationStatuses()
+    {
+        return $this->hasMany(ApplicationStatus::class, 'app_detail_id');
+    }
 }

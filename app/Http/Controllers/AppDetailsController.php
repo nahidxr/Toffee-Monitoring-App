@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Models\ApplicationDetails;
 use App\Models\ApplicationName;
+use App\Models\ApplicationStatus;
 use Illuminate\Http\Request;
 use App\Enums\AppDetails;
 use App\Enums\Location;
@@ -157,8 +158,11 @@ class AppDetailsController extends Controller
     {
         try {
             $appDetails = ApplicationDetails::findOrFail($id);
-            
-            // Detach related records from the pivot table
+    
+            // Detach related records from the 'application_statuses' table
+            $appDetails->applicationStatuses()->delete();
+    
+            // Detach related records from the pivot table (if there's any)
             $appDetails->applicationNames()->detach();
             
             // Delete the ApplicationDetails record
@@ -169,5 +173,6 @@ class AppDetailsController extends Controller
             return redirect("/app_details")->with('error', 'Cannot delete the app name due to related records.');
         }
     }
+    
     
 }

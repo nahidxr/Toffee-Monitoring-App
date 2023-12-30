@@ -30,7 +30,7 @@ class TestController extends Controller
     
     public function test()
     {
-        $ip = '172.20.10.61'; // Replace with your IP address
+        $ip = '172.20.10.3'; // Replace with your IP address
         $port = '80'; // Replace with the port you want to check
 
         try {

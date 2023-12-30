@@ -33,10 +33,13 @@ class ApplicationStatusController extends Controller
                 $id = $appDetail->id;
                 $ip = $appDetail->ip;
                 $port = '80'; // Replace with the port you want to check
-                $response = Http::timeout(10)->get("http://$ip:$port");
-                $statusCode = $response->status();
-                $status = ($statusCode >= 200 && $statusCode < 300) ? 'active' : 'inactive';
+    
+                $response = Http::timeout(5)->get("http://$ip:$port");
 
+                // dd($response);
+                $statusCode = $response->status();
+                $status = ($statusCode >= 200 && $statusCode < 300) ? 1 : 0; // Assign 1 for 'active', 0 for 'inactive'
+    
                 // Check if a status already exists for the app_detail_id
                 $existingStatus = ApplicationStatus::where('app_detail_id', $id)->first();
     
