@@ -16,7 +16,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
-        // $schedule->command('send:channel-status-notifications')->everyThirtyMinutes();
+        $schedule->command('send:channel-status-notifications')->everyThirtyMinutes();
         // $schedule->command('send:channel-status-notifications')->everyMinute();
 
 

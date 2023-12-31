@@ -10,7 +10,7 @@
         <p>Dashboard</p>
     </a>
 </li>
-<li class="nav-item">
+<!-- <li class="nav-item">
     <a href="{{ url('/channel_playing') }}" class="nav-link">
         <i class="fas fa-play-circle"></i>
         <p>Channel Playing</p>
@@ -33,9 +33,51 @@
         <i class="fas fa-user-circle"></i>
         <p>Channel Profile</p>
     </a>
+</li> -->
+<li class="nav-item">
+        <a href="#" class="nav-link">
+        <i class="fas fa-check-square"></i>
+            <p>
+           Toffee Channel Check
+            <i class="fas fa-angle-left right"></i>
+            </p>
+        </a>
+        <ul class="nav nav-treeview">
+        <li class="nav-item">
+    <a href="{{ url('/channel_playing') }}" class="nav-link">
+        <i class="fas fa-play-circle"></i>
+        <p>Channel Playing</p>
+    </a>
 </li>
+    <li class="nav-item">
+        <a href="{{ url('/channel_checking') }}" class="nav-link">
+            <i class="fas fa-check-circle"></i>
+            <p>Channel Checking</p>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="{{ url('/channel_name') }}" class="nav-link">
+            <i class="fas fa-file-alt"></i>
+            <p>Program Name</p>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="{{ url('/channel_profile') }}" class="nav-link">
+            <i class="fas fa-user-circle"></i>
+            <p>Channel Profile</p>
+        </a>
+    </li>
+            
+        </ul>
+     </li>
 
 
+     <li class="nav-item">
+    <a href="http://192.168.5.200/remote_link_monitor.php" class="nav-link" target="_blank">
+        <i class="fas fa-link"></i>
+        <p>Remote Link Monitoring</p>
+    </a>
+    </li>
 
     <li class="nav-item">
         <a href="#" class="nav-link">
@@ -84,6 +126,7 @@
             </li>
         </ul>
      </li>
+    
 
 
 
@@ -112,6 +155,12 @@
             <i class="fas fa-user-circle"></i>
             <p>Channel Profile</p>
         </a>
+    </li>
+    <li class="nav-item">
+    <a href="http://192.168.5.200/remote_link_monitor.php" class="nav-link" target="_blank">
+        <i class="fas fa-link"></i>
+        <p>Remote Link Monitoring</p>
+    </a>
     </li>
 @endif
 

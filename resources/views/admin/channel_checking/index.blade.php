@@ -713,7 +713,7 @@ function fetchAndLogAllResponses(urls, channelItem,serviceName,channelId,channel
 
     setInterval(() => {
     location.reload(); // Reload the page
-  }, 120000); // 1 minutes in milliseconds
+  }, 300000); // 2 minutes in milliseconds
 
 
     // countAndSendChannelCounts();

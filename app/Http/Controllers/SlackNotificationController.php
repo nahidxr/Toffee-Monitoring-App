@@ -331,7 +331,7 @@ public function sendChannelCounts()
         ->count();
 
     // Construct the message for Slack notification
-    $message = "*Channel Summary*\n\nTotal Channels: $total_profiles\nInactive Channels: $inactive_channels\nNot Functional Channels: $inactiveChannelsCount";
+    $message = "*Channel Summary*\n\nTotal Channels: $total_profiles\nNot Functional Channels: $inactiveChannelsCount\nInactive Channels: $inactive_channels";
 
     // Send the notification to Slack using the webhook URL
     $webhookUrl = getenv('SLACK_WEBHOOK_URL');

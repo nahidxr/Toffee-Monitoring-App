@@ -95,10 +95,6 @@
                   @endforeach
               </div>
           </div>
-
-
-
-
               {{-- channel status --}}
 
               <div class="form-group">
@@ -106,7 +102,7 @@
                     <select name="status" class="form-control">
                         <option value="">Select a Staus</option>
                         @foreach ($app_details as $x=>$status)
-                        <option value="{{ $x }}" {{ old('status')==$x ? 'selected' : ''}}>{{ $status }}
+                        <option value="{{ $x }}" {{ $app_details_list->status==$x ? 'selected' : ''}}>{{ $status }}
                         </option>
                         @endforeach
                     </select>
