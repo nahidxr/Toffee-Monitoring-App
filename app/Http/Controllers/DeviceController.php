@@ -33,7 +33,7 @@ class DeviceController extends Controller
         return view('admin.devices.nddc_devices', $data);
     }
 
-    public function getBlddcDeviceStatusAndSave()
+    public function getBldcDeviceStatusAndSave()
 {
     $observiumUrl = 'http://192.168.5.92/api/v0/devices'; // Replace with your Observium server URL
     $username = 'support';

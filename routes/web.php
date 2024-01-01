@@ -70,14 +70,14 @@ Route::get('/dashboard', function () {
 //TestController
 // Route::get('/test',[TestController::class,'test']);
 // Route::get('/ping',[TestController::class,'index']);
-Route::get('/ob',[TestController::class,'ob']);
+// Route::get('/ob',[TestController::class,'ob']);
 
 // Route::get('/post',[ApplicationStatusController::class,'test']);
 // Route::get('/ping',[ApplicationStatusController::class,'ping']);
 
 // upload data using route
 // Route::get('/get_nddc_devices',[DeviceController::class,'getNddcDeviceStatusAndSave']);
-// Route::get('/get_bldc_devices',[DeviceController::class,'getBlddcDeviceStatusAndSave']);
+// Route::get('/get_bldc_devices',[DeviceController::class,'getBldcDeviceStatusAndSave']);
 
 
 Route::get('/bldc_devices',[DeviceController::class,'bldcDevices']);
