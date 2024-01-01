@@ -126,7 +126,38 @@
             </li>
         </ul>
      </li>
-    
+
+     <li class="nav-item">
+        <a href="#" class="nav-link">
+        <i class="fas fa-check-circle"></i>
+            <p>
+            Device Status
+            <i class="fas fa-angle-left right"></i>
+            </p>
+        </a>
+        <ul class="nav nav-treeview">
+            <li class="nav-item">
+            <a href="{{ url('/bldc_devices') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>BLDC Device</p>
+            </a>
+            </li>
+            <li class="nav-item">
+            <a href="{{ url('/nddc_devices') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>NDDC Device</p>
+            </a>
+            </li>
+        </ul>
+     </li>
+
+    <!-- <li class="nav-item">
+    <a href="/devices" class="nav-link" target="_blank">
+        <i class="fas fa-link"></i>
+        <p>Devices Status</p>
+    </a>
+    </li>
+     -->
 
 
 

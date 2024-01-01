@@ -2,6 +2,8 @@
 @section('page_title')
 
 <div class="row" style=" margin-top: 9px">
+
+
 <div class="col-lg-3 col-6">
     <!-- small box -->
     <div class="small-box bg-danger">
@@ -24,24 +26,46 @@
 </div>
 
 
-
-  <!-- <div class="col-lg-3 col-6">
+  <div class="col-lg-3 col-6">
 
   <div class="small-box bg-success">
   <a href="#" class="small-box-footer"><i class="fas"></i></a>
       <div class="inner">
-        <h3>53</h3>
+        <h4 style="color: #fff; font-weight: bold;">BLDC Device Status</h4>
+      
 
-        <p>Demo Active Channel</p>
+        <p>  
+          Total Device: {{ $totalDevices}}<br>
+          Device Up: {{ $device_up }}<br>
+          Device Down : {{ $device_down}}<br>
+        </p>
       </div>
       <div class="icon">
         <i class="ion ion-stats-bars"></i>
       </div>
       <a href="#" class="small-box-footer"><i class="fas"></i></a>
     </div>
-  </div> -->
+  </div>
 
 
+  <div class="col-lg-3 col-6">
+  <div class="small-box bg-primary">
+  <a href="#" class="small-box-footer"><i class="fas"></i></a>
+      <div class="inner">
+        <h4 style="color: #fff; font-weight: bold;">NDDC Device Status</h4>
+        <p>  
+          Total Device: {{ $totalNddcDevices}}<br>
+          Device Up: {{ $nddc_device_up }}<br>
+          Device Down : {{ $nddc_device_down}}<br>
+        </p>
+      </div>
+      <div class="icon">
+        <i class="ion ion-stats-bars"></i>
+      </div>
+      <a href="#" class="small-box-footer"><i class="fas"></i></a>
+    </div>
+  </div>
+  
 <!-- 
   <div class="col-lg-3 col-6">
     <div class="small-box bg-danger">

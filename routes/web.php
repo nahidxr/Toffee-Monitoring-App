@@ -12,8 +12,12 @@ use App\Http\Controllers\ApplicationNameController;
 use App\Http\Controllers\AppDetailsController;
 use App\Http\Controllers\ApplicationStatusController;
 use App\Http\Controllers\TestController;
+use App\Http\Controllers\DeviceController;
 use App\Models\Cprofile;
 use App\Models\NotifiedChannel;
+use App\Models\BldcDevice;
+use App\Models\NddcDevice;
+
 
 
 
@@ -50,6 +54,14 @@ Route::get('/dashboard', function () {
     ->get()
     ->count();
 
+    $data['totalDevices'] = BldcDevice::count();
+    $data['device_up'] = BldcDevice::where('status', 1)->count();
+    $data['device_down'] = BldcDevice::where('status', 0)->count();
+
+    $data['totalNddcDevices'] = NddcDevice::count();
+    $data['nddc_device_up'] = NddcDevice::where('status', 1)->count();
+    $data['nddc_device_down'] = NddcDevice::where('status', 0)->count();
+
     return view('admin.dashboard.index' ,$data);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
@@ -58,13 +70,25 @@ Route::get('/dashboard', function () {
 //TestController
 // Route::get('/test',[TestController::class,'test']);
 // Route::get('/ping',[TestController::class,'index']);
+Route::get('/ob',[TestController::class,'ob']);
+
 // Route::get('/post',[ApplicationStatusController::class,'test']);
-Route::get('/ping',[ApplicationStatusController::class,'ping']);
+// Route::get('/ping',[ApplicationStatusController::class,'ping']);
+
+// upload data using route
+// Route::get('/get_nddc_devices',[DeviceController::class,'getNddcDeviceStatusAndSave']);
+// Route::get('/get_bldc_devices',[DeviceController::class,'getBlddcDeviceStatusAndSave']);
+
+
+Route::get('/bldc_devices',[DeviceController::class,'bldcDevices']);
+Route::get('/nddc_devices',[DeviceController::class,'nddcDevices']);
 
 
 
 
 Route::middleware('auth')->group(function () {
+
+//dashboard
 
 //channel checking
 Route::get('/channel_checking', [ChannelCheckController::class, 'index']);
