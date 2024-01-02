@@ -77,7 +77,7 @@ Route::get('/dashboard', function () {
 
 // upload data using route
 // Route::get('/get_nddc_devices',[DeviceController::class,'getNddcDeviceStatusAndSave']);
-// Route::get('/get_bldc_devices',[DeviceController::class,'getBldcDeviceStatusAndSave']);
+Route::get('/get_bldc_devices',[DeviceController::class,'getBldcDeviceStatusAndSave']);
 
 
 Route::get('/bldc_devices',[DeviceController::class,'bldcDevices']);

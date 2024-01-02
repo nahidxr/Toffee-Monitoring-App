@@ -17,8 +17,11 @@ class ProcessDataCommand extends Command
 
     public function handle()
     {
-        DeviceController::getBldcDeviceStatusAndSave();
-        // DeviceController::getNddcDeviceStatusAndSave(); 
-        $this->info('Data processed successfully.');
+        // Instantiate the DeviceController and call the method
+        $deviceController = new DeviceController();
+        $deviceController->getBldcDeviceStatusAndSave();
+        // $deviceController->getNddcDeviceStatusAndSave();
+
+        $this->info('Device status updated successfully.');
     }
 }

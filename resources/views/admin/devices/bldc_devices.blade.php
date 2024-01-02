@@ -25,10 +25,10 @@
             <th>OS</th>
             <th>Location</th>
             <th>Type</th>
-            <th>Status</th>
             <th>CPU (%)</th>
             <th>Last Rebooted</th>
             <th>Uptime</th>
+            <th>Status</th>
         </tr>
     </thead>
     <tbody>
@@ -42,6 +42,10 @@
                 <td>{{ $item->os }}</td>
                 <td>{{ $item->location }}</td>
                 <td>{{ $item->type }}</td>
+                <!-- <th>{{ $item->ss_cpu_raw_system_perc }}</th> -->
+                <th>{{ $item->ss_cpu_raw_system_perc !== null ? $item->ss_cpu_raw_system_perc : 'None' }}</th>
+                <td>{{ $item->last_rebooted }}</td>
+                <td>{{ $item->uptime }}</td>
                 <td>
                     @if($item->status == 1)
                         <button class="btn btn-success">Device Up</button>
@@ -49,9 +53,6 @@
                         <button class="btn btn-danger">Device Down</button>
                     @endif
                 </td>
-                <th>{{ $item->ss_cpu_raw_system_perc }}</th>
-                <td>{{ $item->last_rebooted }}</td>
-                <td>{{ $item->uptime }}</td>
            
             </tr>
         @endforeach
