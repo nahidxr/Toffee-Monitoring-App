@@ -26,8 +26,7 @@
 </div>
 
 
-  <div class="col-lg-3 col-6">
-
+<div class="col-lg-3 col-6">
   <div class="small-box bg-success">
   <a href="#" class="small-box-footer"><i class="fas"></i></a>
       <div class="inner">
@@ -65,6 +64,8 @@
       <a href="#" class="small-box-footer"><i class="fas"></i></a>
     </div>
   </div>
+
+
   
 <!-- 
   <div class="col-lg-3 col-6">

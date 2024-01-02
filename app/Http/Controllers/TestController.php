@@ -111,9 +111,9 @@ class TestController extends Controller
         // $username = 'support';
         // $password = '@dmin#321';
         
-        // $observiumUrl = 'http://192.168.5.236/api/v0/devices'; // Replace with your Observium server URL
-        // $username = 'support';
-        // $password = '$support#342';
+        // // $observiumUrl = 'http://192.168.5.236/api/v0/devices'; // Replace with your Observium server URL
+        // // $username = 'support';
+        // // $password = '$support#342';
 
         // $client = new Client([
         //     'auth' => [$username, $password],
@@ -132,8 +132,9 @@ class TestController extends Controller
         //                 'device_id' => $device['device_id'],
         //                 'status' => $device['status'],
         //                 'hostname' => $device['hostname'],
-        //                 'os' => $device['os'],
+        //                 'os' => $device['features'],
         //                 'last_rebooted' => $device['last_rebooted'],
+        //                 'uptime' => $device['uptime'],
         //                 'location' => $device['location'],
         //                 'type' => $device['type'],
         //             ];
@@ -151,29 +152,31 @@ class TestController extends Controller
 
 
         // $observiumUrl = 'http://192.168.5.92/api/v0/devices/?os=ios'; // Replace with your Observium server URL
-        // $observiumUrl = 'http://192.168.5.92/api/v0/devices'; // Replace with your Observium server URL
-        // $username = 'support';
-        // $password = '@dmin#321';
+        $observiumUrl = 'http://192.168.5.92/api/v0/devices/66'; // Replace with your Observium server URL
+        $username = 'support';
+        $password = '@dmin#321';
 
         // $observiumUrl = 'http://192.168.5.236/api/v0/devices'; // Replace with your Observium server URL
         // $username = 'support';
         // $password = '$support#342';
 
-        // $client = new Client([
-        //     'auth' => [$username, $password],
-        // ]);
+        $client = new Client([
+            'auth' => [$username, $password],
+        ]);
 
-        // try {
-        //     $response = $client->request('GET', $observiumUrl);
-        //     $devices = json_decode($response->getBody(), true);
+        try {
+            $response = $client->request('GET', $observiumUrl);
+            $devices = json_decode($response->getBody(), true);
+            $ssCpuRawSystemPerc = number_format($devices['device']['state']['ucd_ss_cpu']['ssCpuRawSystem']['perc'], 4) . '%';
 
-        //     dd($devices);
 
-        //     // Process $devices as needed
-        //     return response()->json($devices);
-        // } catch (\Exception $e) {
-        //     return response()->json(['error' => $e->getMessage()], 500);
-        // }
+            dd($ssCpuRawSystemPerc);
+
+            // Process $devices as needed
+            return response()->json($devices);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
        
         
     //     $observiumUrl = 'http://192.168.5.236/api/v0/devices'; // Replace with your Observium server URL

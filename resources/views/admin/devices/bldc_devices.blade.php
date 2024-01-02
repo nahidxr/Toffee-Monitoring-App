@@ -26,7 +26,9 @@
             <th>Location</th>
             <th>Type</th>
             <th>Status</th>
+            <th>CPU (%)</th>
             <th>Last Rebooted</th>
+            <th>Uptime</th>
         </tr>
     </thead>
     <tbody>
@@ -47,7 +49,10 @@
                         <button class="btn btn-danger">Device Down</button>
                     @endif
                 </td>
+                <th>{{ $item->ss_cpu_raw_system_perc }}</th>
                 <td>{{ $item->last_rebooted }}</td>
+                <td>{{ $item->uptime }}</td>
+           
             </tr>
         @endforeach
     </tbody>
